@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/problemList">
+
+    <fragment
+        android:id="@+id/addProblem"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.AddProblem"
+        android:label="AddProblem" />
+    <fragment
+        android:id="@+id/addUser"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.users.AddUser"
+        android:label="AddUser" />
+    <fragment
+        android:id="@+id/userList"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.users.UserList"
+        android:label="UserList" >
+        <action
+            android:id="@+id/action_userList_to_addUser"
+            app:destination="@id/addUser" />
+        <action
+            android:id="@+id/action_userList_to_problemList"
+            app:destination="@id/problemList" />
+    </fragment>
+    <fragment
+        android:id="@+id/problemList"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.ProblemList"
+        android:label="ProblemList" >
+        <action
+            android:id="@+id/action_problemList_to_addProblem"
+            app:destination="@id/addProblem" />
+        <action
+            android:id="@+id/action_problemList_to_userList"
+            app:destination="@id/addUser" />
+    </fragment>
+</navigation>

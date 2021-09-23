@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">ChessProblems</string>
+    <string name="problems">Problems</string>
+    <string name="users">Users</string>
+    <string name="titleNewUser">New user</string>
+    <string name="save">Save</string>
+    <string name="nickname">Username</string>
+    <string name="rating">Rating</string>
+    <string name="solved_problem">Solved problem</string>
+    <string name="problem_id">Problem number</string>
+    <string name="problem_time">Problem time (s)</string>
+    <string name="add_solved_problem">Add problem</string>
+    <string name="titleNewProblem">New problem</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="whiteStarts">White starts</string>
+    <string name="add_white_position">Add white figure</string>
+    <string name="add_move">Add move</string>
+    <string name="moves">Moves</string>
+    <string name="whitePositions">White positions</string>
+    <string name="blackPositions">Black positions</string>
+    <string name="add_black_position">Add black figure</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="position">Position</string>
+    <string name="addUser">Add user</string>
+    <string name="addProblem">Add problem</string>
+</resources>

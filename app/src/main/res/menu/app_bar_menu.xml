@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/problemList"
+        android:enabled="true"
+        android:icon="@drawable/ic_question_mark_24"
+        android:title="@string/problems"/>
+    <item
+        android:id="@+id/userList"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/users"/>
+</menu>
