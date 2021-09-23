@@ -2,16 +2,12 @@ package dev.ky3he4ik.chessproblems.presentation.view.problems.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemListElementBinding
-import dev.ky3he4ik.chessproblems.databinding.UserListElementBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
-import dev.ky3he4ik.chessproblems.presentation.view.problems.ProblemList
-import java.lang.StringBuilder
 
-class ProblemListElementAdapter(val data: List<ProblemInfo>): RecyclerView.Adapter<ProblemListElementAdapter.ProblemListElementHolder>() {
+class ProblemListElementAdapter(val data: List<ProblemInfo>) :
+    RecyclerView.Adapter<ProblemListElementAdapter.ProblemListElementHolder>() {
     override fun getItemCount(): Int {
         return data.size
     }

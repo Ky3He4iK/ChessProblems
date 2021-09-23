@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.UserListFragmentBinding
-import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.AddUserSolvedProblemListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.UserListElementAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.UserListViewModel
 

@@ -6,7 +6,6 @@
     <string name="save">Save</string>
     <string name="nickname">Username</string>
     <string name="rating">Rating</string>
-    <string name="solved_problem">Solved problem</string>
     <string name="problem_id">Problem number</string>
     <string name="problem_time">Problem time (s)</string>
     <string name="add_solved_problem">Add problem</string>

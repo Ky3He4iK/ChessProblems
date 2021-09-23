@@ -33,9 +33,6 @@ class ProblemInfoDTO(
     moves,
     figurePosition,
 ) {
-    init {
-        var a = 0;
-    }
     constructor(problem: ProblemInfo) : this(
         problem.problemId,
         problem.title,

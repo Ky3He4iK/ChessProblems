@@ -34,7 +34,7 @@ class AddUser : Fragment() {
             val nick = binding.nickname.text.toString()
             val rating = binding.rating.text.toString().toIntOrNull()
             val solvedProblems = (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
-            if (!nick.isEmpty() && rating != null) {
+            if (nick.isNotEmpty() && rating != null) {
                 viewModel.addUser(
                     nick, rating, solvedProblems.value!!
                 )
