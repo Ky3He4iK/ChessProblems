@@ -12,7 +12,7 @@ import java.lang.StringBuilder
 class UserListElementAdapter(val data: List<UserInfo>): RecyclerView.Adapter<UserListElementAdapter.UserListElementHolder>() {
 
     override fun getItemCount(): Int {
-        return data.size ?: 0
+        return data.size
     }
 
     override fun onCreateViewHolder(
