@@ -6,11 +6,7 @@ import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.presentation.repository.Repository
 
 class UserListViewModel: ViewModel() {
-    fun getUsersList(): LiveData<List<UserInfo>> {
-        return Repository.getUsersRepository().getAllUsers()
-    }
+    fun getUsersList(): LiveData<List<UserInfo>> = Repository.usersRepository.getAllUsers()
 
-    fun deleteUser(user: UserInfo) {
-        Repository.getUsersRepository().deleteUser(user)
-    }
+    fun deleteUser(user: UserInfo) = Repository.usersRepository.deleteUser(user)
 }

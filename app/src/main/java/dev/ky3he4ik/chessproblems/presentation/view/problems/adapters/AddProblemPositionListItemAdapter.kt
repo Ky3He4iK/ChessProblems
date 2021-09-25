@@ -9,13 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemPositionListItemBinding
 
 class AddProblemPositionListItemAdapter: RecyclerView.Adapter<AddProblemPositionListItemAdapter.ProblemPositionHolder>() {
-    private val _data = MutableLiveData<ArrayList<String>>()
-    val data: LiveData<ArrayList<String>>
-        get() = _data
-
-    init {
-        _data.value = arrayListOf()
-    }
+    val data = MutableLiveData<ArrayList<String>>(arrayListOf())
 
     override fun getItemCount(): Int {
         return data.value?.size ?: 0
@@ -38,13 +32,13 @@ class AddProblemPositionListItemAdapter: RecyclerView.Adapter<AddProblemPosition
         val pos = data.value!![position]
         positionHolder.binding.position.setText(pos)
         positionHolder.binding.position.addTextChangedListener {
-            _data.value?.set(position, it.toString())
+            data.value?.set(position, it.toString())
         }
     }
 
     fun addSection() {
-        _data.value?.add("")
-        notifyItemInserted(_data.value!!.size - 1)
+        data.value?.add("")
+        notifyItemInserted(data.value!!.size - 1)
     }
 
     class ProblemPositionHolder(val binding: ProblemPositionListItemBinding) :

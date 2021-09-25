@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.ky3he4ik.chessproblems.databinding.AddUserFragmentBinding
+import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
+import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.AddUserSolvedProblemListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.AddUserViewModel
 
-class AddUser : Fragment() {
+class AddUserFragment : Fragment() {
     private lateinit var viewModel: AddUserViewModel
     private lateinit var binding: AddUserFragmentBinding
     override fun onCreateView(
@@ -35,9 +37,9 @@ class AddUser : Fragment() {
             val rating = binding.rating.text.toString().toIntOrNull()
             val solvedProblems = (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
             if (nick.isNotEmpty() && rating != null) {
-                viewModel.addUser(
-                    nick, rating, solvedProblems.value!!
-                )
+                val solvedProblemsModel = solvedProblems.value!!.map { SolvedProblem(it.first, it.second) }
+                val user = UserInfo(0, nick, rating, solvedProblemsModel.size, solvedProblemsModel)
+                viewModel.addUser(user)
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "Insert all data", Toast.LENGTH_SHORT).show()

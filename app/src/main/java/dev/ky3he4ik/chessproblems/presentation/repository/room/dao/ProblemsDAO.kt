@@ -20,4 +20,5 @@ interface ProblemsDAO {
 
     @Query("SELECT * FROM problem_info WHERE problem_id = :problemId")
     fun getProblem(problemId: Int): ProblemInfoDTO?
+
 }

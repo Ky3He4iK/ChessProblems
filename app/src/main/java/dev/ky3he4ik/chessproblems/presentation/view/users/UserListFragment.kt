@@ -1,4 +1,4 @@
-package dev.ky3he4ik.chessproblems.presentation.view.problems
+package dev.ky3he4ik.chessproblems.presentation.view.users
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,19 +10,19 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.ky3he4ik.chessproblems.databinding.ProblemListFragmentBinding
-import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.ProblemListElementAdapter
-import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListViewModel
+import dev.ky3he4ik.chessproblems.databinding.UserListFragmentBinding
+import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.UserListElementAdapter
+import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.UserListViewModel
 
-class ProblemList : Fragment() {
-    private lateinit var viewModel: ProblemListViewModel
-    private lateinit var binding: ProblemListFragmentBinding
+class UserListFragment : Fragment() {
+    private lateinit var viewModel: UserListViewModel
+    private lateinit var binding: UserListFragmentBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ProblemListFragmentBinding.inflate(layoutInflater, container, false)
-        binding.problemRecyclerView.also {
+        binding = UserListFragmentBinding.inflate(layoutInflater, container, false)
+        binding.userRecyclerView.also {
             it.layoutManager = LinearLayoutManager(context)
             it.setHasFixedSize(false)
         }
@@ -35,13 +35,13 @@ class ProblemList : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                viewModel.deleteProblem(
-                    (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data[position]
+                viewModel.deleteUser(
+                    (binding.userRecyclerView.adapter as UserListElementAdapter).data[position]
                 )
             }
-        }).attachToRecyclerView(binding.problemRecyclerView)
-        binding.floatingActionButton.setOnClickListener {
-            val action = ProblemListDirections.actionProblemListToAddProblem()
+        }).attachToRecyclerView(binding.userRecyclerView)
+        binding.floatingActionButton2.setOnClickListener {
+            val action = UserListFragmentDirections.actionUserListToAddUser()
             it.findNavController().navigate(action)
         }
         return binding.root
@@ -49,10 +49,10 @@ class ProblemList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(UserListViewModel::class.java)
 
-        viewModel.getProblemsList().observe(viewLifecycleOwner, {
-            binding.problemRecyclerView.adapter = ProblemListElementAdapter(it)
+        viewModel.getUsersList().observe(viewLifecycleOwner, {
+            binding.userRecyclerView.adapter = UserListElementAdapter(it)
         })
     }
 }

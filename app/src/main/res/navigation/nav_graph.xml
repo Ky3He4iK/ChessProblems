@@ -6,15 +6,15 @@
 
     <fragment
         android:id="@+id/addProblem"
-        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.AddProblem"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.AddProblemFragment"
         android:label="AddProblem" />
     <fragment
         android:id="@+id/addUser"
-        android:name="dev.ky3he4ik.chessproblems.presentation.view.users.AddUser"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.users.AddUserFragment"
         android:label="AddUser" />
     <fragment
         android:id="@+id/userList"
-        android:name="dev.ky3he4ik.chessproblems.presentation.view.users.UserList"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.users.UserListFragment"
         android:label="UserList" >
         <action
             android:id="@+id/action_userList_to_addUser"
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/problemList"
-        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.ProblemList"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.ProblemListFragment"
         android:label="ProblemList" >
         <action
             android:id="@+id/action_problemList_to_addProblem"

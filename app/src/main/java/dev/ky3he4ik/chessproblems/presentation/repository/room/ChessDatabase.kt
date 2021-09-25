@@ -46,5 +46,4 @@ abstract class ChessDatabase : RoomDatabase() {
                 .build()
         }
     }
-
 }

@@ -8,24 +8,25 @@ import dev.ky3he4ik.chessproblems.presentation.repository.room.UsersRepositoryIm
 
 class Repository {
     companion object {
-        private var problemsRepository: ProblemsRepository? = null
+        private var _problemsRepository: ProblemsRepository? = null
+        val problemsRepository: ProblemsRepository
+            get() {
+                if (_problemsRepository == null)
+                    _problemsRepository = MockProblemsRepository()
+                return _problemsRepository!!
+            }
 
-        private var usersRepository: UsersRepository? = null
-
-        fun getProblemsRepository(): ProblemsRepository {
-            problemsRepository = problemsRepository ?: MockProblemsRepository()
-            return problemsRepository!!
-        }
-
-        fun getUsersRepository(): UsersRepository {
-            usersRepository= usersRepository ?: MockUsersRepository()
-            return usersRepository!!
-        }
+        private var _usersRepository: UsersRepository? = null
+        val usersRepository: UsersRepository
+            get() {
+                if (_usersRepository == null)
+                    _usersRepository = MockUsersRepository()
+                return _usersRepository!!
+            }
 
         fun initRepository(application: Application) {
-            problemsRepository = problemsRepository ?: ProblemsRepositoryImpl(application)
-
-            usersRepository = usersRepository ?: UsersRepositoryImpl(application)
+            _problemsRepository = _problemsRepository ?: ProblemsRepositoryImpl(application)
+            _usersRepository = _usersRepository ?: UsersRepositoryImpl(application)
         }
     }
 }

@@ -3,19 +3,13 @@ package dev.ky3he4ik.chessproblems.presentation.view.problems.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemMovesListItemBinding
 
-class AddProblemMovesListItemAdapter: RecyclerView.Adapter<AddProblemMovesListItemAdapter.ProblemMovesHolder>() {
-    private val _data = MutableLiveData<ArrayList<Pair<String, String>>>()
-    val data: LiveData<ArrayList<Pair<String, String>>>
-    get() = _data
-
-    init {
-        _data.value = arrayListOf()
-    }
+class AddProblemMovesListItemAdapter :
+    RecyclerView.Adapter<AddProblemMovesListItemAdapter.ProblemMovesHolder>() {
+    val data = MutableLiveData<ArrayList<Pair<String, String>>>(arrayListOf())
 
     override fun getItemCount(): Int {
         return data.value?.size ?: 0
@@ -38,17 +32,17 @@ class AddProblemMovesListItemAdapter: RecyclerView.Adapter<AddProblemMovesListIt
         val move = data.value!![position]
         movesHolder.binding.movesFrom.setText(move.first)
         movesHolder.binding.movesFrom.addTextChangedListener {
-            _data.value?.set(position, Pair(it.toString(), _data.value!![position].second))
+            data.value?.set(position, Pair(it.toString(), data.value!![position].second))
         }
         movesHolder.binding.movesTo.setText(move.second)
         movesHolder.binding.movesTo.addTextChangedListener {
-            _data.value?.set(position, Pair(_data.value!![position].first, it.toString()))
+            data.value?.set(position, Pair(data.value!![position].first, it.toString()))
         }
     }
 
     fun addSection() {
-        _data.value?.add(Pair("", ""))
-        notifyItemInserted(_data.value!!.size - 1)
+        data.value?.add(Pair("", ""))
+        notifyItemInserted(data.value!!.size - 1)
     }
 
     class ProblemMovesHolder(val binding: ProblemMovesListItemBinding) :

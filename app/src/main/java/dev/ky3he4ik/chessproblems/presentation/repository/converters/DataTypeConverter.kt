@@ -10,7 +10,6 @@ import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import java.lang.reflect.Type
 import java.util.*
 
-
 object DataTypeConverter {
     private val gson = Gson()
 

@@ -10,11 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.ky3he4ik.chessproblems.databinding.AddProblemFragmentBinding
+import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
+import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
+import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemMovesListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemPositionListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.AddProblemViewModel
 
-class AddProblem : Fragment() {
+class AddProblemFragment : Fragment() {
     private lateinit var viewModel: AddProblemViewModel
     private lateinit var binding: AddProblemFragmentBinding
     override fun onCreateView(
@@ -59,18 +62,14 @@ class AddProblem : Fragment() {
             val blackPositions =
                 (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).data.value
             if (title.isNotEmpty() && description.isNotEmpty() && difficulty != null &&
-                movesRaw != null && whitePositions != null && blackPositions != null &&
-                movesRaw.isNotEmpty() && whitePositions.isNotEmpty() && blackPositions.isNotEmpty()
+                !movesRaw.isNullOrEmpty() && !whitePositions.isNullOrEmpty() && !blackPositions.isNullOrEmpty()
             ) {
-                viewModel.addProblem(
-                    title,
-                    description,
-                    difficulty,
-                    whiteStarts,
-                    movesRaw,
-                    whitePositions,
-                    blackPositions
-                )
+                val moves = movesRaw.map { ProblemMove(it.first, it.second) }
+                val positions = whitePositions.map { FigurePosition(true, it) } +
+                        blackPositions.map { FigurePosition(false, it) }
+                val problem =
+                    ProblemInfo(0, title, description, difficulty, whiteStarts, moves, positions)
+                viewModel.addProblem(problem)
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "Insert all data", Toast.LENGTH_SHORT).show()

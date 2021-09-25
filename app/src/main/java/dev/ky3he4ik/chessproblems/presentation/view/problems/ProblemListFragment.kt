@@ -1,4 +1,4 @@
-package dev.ky3he4ik.chessproblems.presentation.view.users
+package dev.ky3he4ik.chessproblems.presentation.view.problems
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,22 +10,21 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.ky3he4ik.chessproblems.databinding.UserListFragmentBinding
-import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.UserListElementAdapter
-import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.UserListViewModel
+import dev.ky3he4ik.chessproblems.databinding.ProblemListFragmentBinding
+import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.ProblemListElementAdapter
+import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListViewModel
 
-class UserList : Fragment() {
-    private lateinit var viewModel: UserListViewModel
-    private lateinit var binding: UserListFragmentBinding
+class ProblemListFragment : Fragment() {
+    private lateinit var viewModel: ProblemListViewModel
+    private lateinit var binding: ProblemListFragmentBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = UserListFragmentBinding.inflate(layoutInflater, container, false)
-        binding.userRecyclerView.also {
+        binding = ProblemListFragmentBinding.inflate(layoutInflater, container, false)
+        binding.problemRecyclerView.also {
             it.layoutManager = LinearLayoutManager(context)
             it.setHasFixedSize(false)
-//            it.adapter = UserListElementAdapter()
         }
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
@@ -36,13 +35,13 @@ class UserList : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                viewModel.deleteUser(
-                    (binding.userRecyclerView.adapter as UserListElementAdapter).data[position]
+                viewModel.deleteProblem(
+                    (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data[position]
                 )
             }
-        }).attachToRecyclerView(binding.userRecyclerView)
-        binding.floatingActionButton2.setOnClickListener {
-            val action = UserListDirections.actionUserListToAddUser()
+        }).attachToRecyclerView(binding.problemRecyclerView)
+        binding.floatingActionButton.setOnClickListener {
+            val action = ProblemListFragmentDirections.actionProblemListToAddProblem()
             it.findNavController().navigate(action)
         }
         return binding.root
@@ -50,10 +49,10 @@ class UserList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(UserListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
 
-        viewModel.getUsersList().observe(viewLifecycleOwner, {
-            binding.userRecyclerView.adapter = UserListElementAdapter(it)
+        viewModel.getProblemsList().observe(viewLifecycleOwner, {
+            binding.problemRecyclerView.adapter = ProblemListElementAdapter(it)
         })
     }
 }
