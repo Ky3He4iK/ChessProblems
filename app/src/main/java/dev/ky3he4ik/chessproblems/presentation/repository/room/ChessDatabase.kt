@@ -12,10 +12,17 @@ import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.ProblemsDAO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.UsersDAO
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import androidx.sqlite.db.SupportSQLiteDatabase
+
+import androidx.room.migration.Migration
+
+
+
 
 @Database(
     entities = [ProblemInfoDTO::class, UserInfoDTO::class],
-    version = 1,
+    version = 2,
+
     exportSchema = false
 )
 @TypeConverters(DataTypeConverter::class)
@@ -28,6 +35,7 @@ abstract class ChessDatabase : RoomDatabase() {
         private var instance: ChessDatabase? = null
 
         private const val NUMBER_OF_THREADS = 4
+
         val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
         fun getInstance(context: Context): ChessDatabase {
@@ -43,6 +51,7 @@ abstract class ChessDatabase : RoomDatabase() {
                 "chess_problems_db"
             )
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

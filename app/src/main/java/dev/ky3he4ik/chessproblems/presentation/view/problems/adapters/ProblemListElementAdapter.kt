@@ -1,10 +1,14 @@
 package dev.ky3he4ik.chessproblems.presentation.view.problems.adapters
 
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemListElementBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
+import java.lang.Exception
 
 class ProblemListElementAdapter(val data: List<ProblemInfo>) :
     RecyclerView.Adapter<ProblemListElementAdapter.ProblemListElementHolder>() {
@@ -47,6 +51,23 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>) :
         }
         sb.append(sbB)
         holder.binding.positions.text = sb.toString()
+        if (problemInfo.image != null) {
+            try {
+                val resId = problemInfo.image?.toIntOrNull()
+                if (resId == null) {
+                    holder.binding.image.setImageBitmap(
+                        BitmapFactory.decodeFileDescriptor(
+                            holder.binding.root.context.contentResolver.openFileDescriptor(
+                                Uri.parse(problemInfo.image), "r"
+                            )?.fileDescriptor
+                        )
+                    )
+                } else
+                    holder.binding.image.setImageResource(resId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     class ProblemListElementHolder(val binding: ProblemListElementBinding) :

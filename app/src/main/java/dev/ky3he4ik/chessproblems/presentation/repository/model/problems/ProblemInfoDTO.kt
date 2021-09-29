@@ -12,21 +12,19 @@ class ProblemInfoDTO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "problem_id")
     override val problemId: Int,
-    @ColumnInfo(name = "title")
     override val title: String,
-    @ColumnInfo(name = "description")
+    override val image: String?,
     override val description: String,
-    @ColumnInfo(name = "difficulty")
     override val difficulty: Int,
     @ColumnInfo(name = "white_starts")
     override val whiteStarts: Boolean,
-    @ColumnInfo(name = "moves")
     override val moves: List<ProblemMove>,
     @ColumnInfo(name = "figure_position")
     override val figurePosition: List<FigurePosition>,
 ) : ProblemInfo(
     problemId,
     title,
+    image,
     description,
     difficulty,
     whiteStarts,
@@ -36,6 +34,7 @@ class ProblemInfoDTO(
     constructor(problem: ProblemInfo) : this(
         problem.problemId,
         problem.title,
+        problem.image,
         problem.description,
         problem.difficulty,
         problem.whiteStarts,

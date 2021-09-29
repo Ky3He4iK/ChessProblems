@@ -1,5 +1,7 @@
 package dev.ky3he4ik.chessproblems.presentation.view.users.adapters
 
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +37,23 @@ class UserListElementAdapter(val data: List<UserInfo>) :
         val sb = StringBuilder("Solved problems:")
         userInfo.solvedProblems.forEach { sb.append("\n${it.problem_id} - ${it.solvingTime}s") }
         holder.binding.solvedProblems.text = sb
+        if (userInfo.image != null) {
+            try {
+                val resId = userInfo.image?.toIntOrNull()
+                if (resId == null) {
+                    holder.binding.image.setImageBitmap(
+                        BitmapFactory.decodeFileDescriptor(
+                            holder.binding.root.context.contentResolver.openFileDescriptor(
+                                Uri.parse(userInfo.image), "r"
+                            )?.fileDescriptor
+                        )
+                    )
+                } else
+                    holder.binding.image.setImageResource(resId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     class UserListElementHolder(val binding: UserListElementBinding) :

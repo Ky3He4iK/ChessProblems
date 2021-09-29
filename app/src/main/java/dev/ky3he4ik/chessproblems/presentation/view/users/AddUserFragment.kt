@@ -1,14 +1,19 @@
 package dev.ky3he4ik.chessproblems.presentation.view.users
 
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddUserFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
@@ -31,6 +36,13 @@ class AddUserFragment : Fragment() {
         binding.button.setOnClickListener {
             (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).addSection()
         }
+        binding.image.setOnClickListener {
+            setPhoto()
+        }
+        binding.image.setOnLongClickListener {
+            viewModel.setImage(R.drawable.ic_baseline_add_circle_outline_24.toString())
+            true
+        }
 
         binding.saveButton.setOnClickListener {
             val nick = binding.nickname.text.toString()
@@ -38,7 +50,7 @@ class AddUserFragment : Fragment() {
             val solvedProblems = (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
             if (nick.isNotEmpty() && rating != null) {
                 val solvedProblemsModel = solvedProblems.value!!.map { SolvedProblem(it.first, it.second) }
-                val user = UserInfo(0, nick, rating, solvedProblemsModel.size, solvedProblemsModel)
+                val user = UserInfo(0, nick, null, rating, solvedProblemsModel.size, solvedProblemsModel)
                 viewModel.addUser(user)
                 findNavController().popBackStack()
             } else {
@@ -48,8 +60,36 @@ class AddUserFragment : Fragment() {
         return binding.root
     }
 
+    private fun setPhoto() {
+        requireActivity().activityResultRegistry.register(
+            "key",
+            ActivityResultContracts.OpenDocument()
+        ) { result ->
+            if (result != null) {
+                requireActivity().applicationContext.contentResolver
+                    .takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                viewModel.setImage(result.toString())
+            }
+        }.launch(arrayOf("image/*"))
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(AddUserViewModel::class.java)
+        viewModel.image.observe(viewLifecycleOwner, {
+            if (it == null) {
+                binding.image.setImageDrawable(null)
+            } else {
+                val uri = Uri.parse(it)
+                binding.image.setImageBitmap(
+                    BitmapFactory.decodeFileDescriptor(
+                        requireContext().contentResolver.openFileDescriptor(
+                            uri,
+                            "r"
+                        )?.fileDescriptor
+                    )
+                )
+            }
+        })
     }
 }

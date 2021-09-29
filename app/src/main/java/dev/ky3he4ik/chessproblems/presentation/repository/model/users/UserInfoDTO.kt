@@ -11,17 +11,16 @@ class UserInfoDTO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "user_id")
     override val userId: Int,
-    @ColumnInfo(name = "nick")
     override val nick: String,
-    @ColumnInfo(name = "rating")
+    override val image: String?,
     override val rating: Int = 0,
-    @ColumnInfo(name = "solved")
     override val solved: Int = 0,
     @ColumnInfo(name = "solved_problems")
     override val solvedProblems: List<SolvedProblem>,
 ) : UserInfo(
     userId,
     nick,
+    image,
     rating,
     solved,
     solvedProblems,
@@ -29,6 +28,7 @@ class UserInfoDTO(
     constructor(user: UserInfo): this(
         user.userId,
         user.nick,
+        user.image,
         user.rating,
         user.solved,
         user.solvedProblems,

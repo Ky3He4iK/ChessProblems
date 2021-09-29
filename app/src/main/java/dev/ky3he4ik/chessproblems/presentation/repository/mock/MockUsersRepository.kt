@@ -11,6 +11,7 @@ class MockUsersRepository : UsersRepository {
         UserInfo(
             1,
             "Beginner",
+            null,
             42,
             0,
             arrayListOf(

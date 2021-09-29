@@ -12,6 +12,7 @@ class MockProblemsRepository : ProblemsRepository {
         ProblemInfo(
             1,
             "Eat the horse",
+            null,
             "Act like you're from Kazakhstan",
             1,
             true,
