@@ -4,11 +4,13 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.ProblemListElementBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
@@ -57,19 +59,16 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>) :
         holder.binding.positions.text = sb.toString()
         if (problemInfo.image != null) {
             try {
-                val resId = problemInfo.image?.toIntOrNull()
-                if (resId == null) {
-                    holder.binding.image.setImageBitmap(
-                        BitmapFactory.decodeFileDescriptor(
-                            holder.binding.root.context.contentResolver.openFileDescriptor(
-                                Uri.parse(problemInfo.image), "r"
-                            )?.fileDescriptor
-                        )
+                holder.binding.image.setImageBitmap(
+                    BitmapFactory.decodeFileDescriptor(
+                        holder.binding.root.context.contentResolver.openFileDescriptor(
+                            Uri.parse(problemInfo.image), "r"
+                        )?.fileDescriptor
                     )
-                } else
-                    holder.binding.image.setImageResource(resId)
+                )
             } catch (e: Exception) {
-                e.printStackTrace()
+                holder.binding.image.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
+                Log.e("Chess/PLEA", e.toString(), e)
             }
         }
         holder.binding.shareImage.setOnClickListener {
@@ -77,7 +76,7 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>) :
             val sendIntent = Intent(Intent.ACTION_SEND)
             sendIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "chess://c.ky3he4ik.dev/p/?$encoded"
+                "https://c.ky3he4ik.dev/p/?$encoded"
             )
             sendIntent.type = "text/plain"
             val shareIntent = Intent.createChooser(sendIntent, null)

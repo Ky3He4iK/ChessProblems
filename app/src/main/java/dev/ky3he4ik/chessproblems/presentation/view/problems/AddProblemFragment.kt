@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +62,7 @@ class AddProblemFragment : Fragment() {
             setPhoto()
         }
         binding.image.setOnLongClickListener {
-            viewModel.setImage(R.drawable.ic_baseline_add_circle_outline_24.toString())
+            viewModel.setImage(null)
             true
         }
 
@@ -89,8 +90,8 @@ class AddProblemFragment : Fragment() {
                         description,
                         difficulty,
                         whiteStarts,
-                        moves,
-                        positions
+                        moves.filter { it.posStart.isNotEmpty() && it.posEnd.isNotEmpty() },
+                        positions.filter { it.code.isNotEmpty() }
                     )
                 viewModel.addProblem(problem)
                 findNavController().popBackStack()
@@ -102,22 +103,26 @@ class AddProblemFragment : Fragment() {
     }
 
     private fun setPhoto() {
-        requireActivity().activityResultRegistry.register(
-            "key",
-            ActivityResultContracts.OpenDocument()
-        ) { result ->
-            if (result != null) {
-                requireActivity().applicationContext.contentResolver
-                    .takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                viewModel.setImage(result.toString())
-            }
-        }.launch(arrayOf("image/*"))
+        try {
+            requireActivity().activityResultRegistry.register(
+                "key",
+                ActivityResultContracts.OpenDocument()
+            ) { result ->
+                if (result != null) {
+                    requireActivity().applicationContext.contentResolver
+                        .takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    viewModel.setImage(result.toString())
+                }
+            }.launch(arrayOf("image/*"))
+        } catch (e: Exception) {
+            Log.e("Chess/AUF", e.toString(), e)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val data = navArgs<AddProblemFragmentArgs>().value.data
-        if (data.isNotEmpty()) {
+        if (!data.isNullOrEmpty()) {
             val problem = ProblemOperations.fromUrl(data)
             if (problem != null) {
                 binding.title.setText(problem.title)
@@ -125,7 +130,10 @@ class AddProblemFragment : Fragment() {
                 binding.difficulty.setText(problem.difficulty.toString())
                 binding.whiteStarts.isChecked = problem.whiteStarts
                 problem.moves.forEach {
-                    (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(it.posStart, it.posEnd)
+                    (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(
+                        it.posStart,
+                        it.posEnd
+                    )
                 }
                 problem.figurePosition.forEach {
                     val adapter = when (it.isWhite) {
@@ -139,17 +147,20 @@ class AddProblemFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(AddProblemViewModel::class.java)
         viewModel.image.observe(viewLifecycleOwner, {
             if (it == null) {
-                binding.image.setImageDrawable(null)
-            } else {
-                val uri = Uri.parse(it)
+                binding.image.setImageResource(R.drawable.ic_baseline_add_circle_outline_24)
+                return@observe
+            }
+            try {
                 binding.image.setImageBitmap(
                     BitmapFactory.decodeFileDescriptor(
                         requireContext().contentResolver.openFileDescriptor(
-                            uri,
+                            Uri.parse(it),
                             "r"
                         )?.fileDescriptor
                     )
                 )
+            } catch (e: Exception) {
+                Log.e("Chess/AUF", e.toString(), e)
             }
         })
     }

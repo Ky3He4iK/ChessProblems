@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,17 +41,21 @@ class AddUserFragment : Fragment() {
             setPhoto()
         }
         binding.image.setOnLongClickListener {
-            viewModel.setImage(R.drawable.ic_baseline_add_circle_outline_24.toString())
+            viewModel.setImage(null)
             true
         }
 
         binding.saveButton.setOnClickListener {
             val nick = binding.nickname.text.toString()
             val rating = binding.rating.text.toString().toIntOrNull()
-            val solvedProblems = (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
+            val solvedProblems =
+                (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
+
             if (nick.isNotEmpty() && rating != null) {
-                val solvedProblemsModel = solvedProblems.value!!.map { SolvedProblem(it.first, it.second) }
-                val user = UserInfo(0, nick, null, rating, solvedProblemsModel.size, solvedProblemsModel)
+                val solvedProblemsModel =
+                    solvedProblems.value!!.map { SolvedProblem(it.first, it.second) }
+                val user =
+                    UserInfo(0, nick, null, rating, solvedProblemsModel.size, solvedProblemsModel)
                 viewModel.addUser(user)
                 findNavController().popBackStack()
             } else {
@@ -61,16 +66,20 @@ class AddUserFragment : Fragment() {
     }
 
     private fun setPhoto() {
-        requireActivity().activityResultRegistry.register(
-            "key",
-            ActivityResultContracts.OpenDocument()
-        ) { result ->
-            if (result != null) {
-                requireActivity().applicationContext.contentResolver
-                    .takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                viewModel.setImage(result.toString())
-            }
-        }.launch(arrayOf("image/*"))
+        try {
+            requireActivity().activityResultRegistry.register(
+                "key",
+                ActivityResultContracts.OpenDocument()
+            ) { result ->
+                if (result != null) {
+                    requireActivity().applicationContext.contentResolver
+                        .takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    viewModel.setImage(result.toString())
+                }
+            }.launch(arrayOf("image/*"))
+        } catch (e: Exception) {
+            Log.e("Chess/AUF", e.toString(), e)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,17 +87,20 @@ class AddUserFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(AddUserViewModel::class.java)
         viewModel.image.observe(viewLifecycleOwner, {
             if (it == null) {
-                binding.image.setImageDrawable(null)
-            } else {
-                val uri = Uri.parse(it)
+                binding.image.setImageResource(R.drawable.ic_baseline_add_circle_outline_24)
+                return@observe
+            }
+            try {
                 binding.image.setImageBitmap(
                     BitmapFactory.decodeFileDescriptor(
                         requireContext().contentResolver.openFileDescriptor(
-                            uri,
+                            Uri.parse(it),
                             "r"
                         )?.fileDescriptor
                     )
                 )
+            } catch (e: Exception) {
+                Log.e("Chess/AUF", e.toString(), e)
             }
         })
     }

@@ -2,9 +2,11 @@ package dev.ky3he4ik.chessproblems.presentation.view.users.adapters
 
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.UserListElementBinding
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 
@@ -39,19 +41,16 @@ class UserListElementAdapter(val data: List<UserInfo>) :
         holder.binding.solvedProblems.text = sb
         if (userInfo.image != null) {
             try {
-                val resId = userInfo.image?.toIntOrNull()
-                if (resId == null) {
-                    holder.binding.image.setImageBitmap(
-                        BitmapFactory.decodeFileDescriptor(
-                            holder.binding.root.context.contentResolver.openFileDescriptor(
-                                Uri.parse(userInfo.image), "r"
-                            )?.fileDescriptor
-                        )
+                holder.binding.image.setImageBitmap(
+                    BitmapFactory.decodeFileDescriptor(
+                        holder.binding.root.context.contentResolver.openFileDescriptor(
+                            Uri.parse(userInfo.image), "r"
+                        )?.fileDescriptor
                     )
-                } else
-                    holder.binding.image.setImageResource(resId)
+                )
             } catch (e: Exception) {
-                e.printStackTrace()
+                holder.binding.image.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
+                Log.e("Chess/PLEA", e.toString(), e)
             }
         }
     }
