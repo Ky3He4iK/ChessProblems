@@ -36,8 +36,8 @@ class AddProblemPositionListItemAdapter: RecyclerView.Adapter<AddProblemPosition
         }
     }
 
-    fun addSection() {
-        data.value?.add("")
+    fun addSection(pos: String = "") {
+        data.value?.add(pos)
         notifyItemInserted(data.value!!.size - 1)
     }
 

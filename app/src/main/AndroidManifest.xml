@@ -21,8 +21,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
-                    android:scheme="cp"
-                    android:host="chess.problem"/>
+                    android:scheme="chess"
+                    android:host="c.ky3he4ik.dev"/>
+                <data
+                    android:scheme="http"
+                    android:host="c.ky3he4ik.dev"/>
+                <data
+                    android:scheme="https"
+                    android:host="c.ky3he4ik.dev"/>
             </intent-filter>
         </activity>
     </application>

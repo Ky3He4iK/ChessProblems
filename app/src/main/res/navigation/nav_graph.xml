@@ -7,7 +7,16 @@
     <fragment
         android:id="@+id/addProblem"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.AddProblemFragment"
-        android:label="AddProblem" />
+        android:label="AddProblem" >
+        <argument
+            android:name="data"
+            app:argType="string"
+            android:defaultValue=""
+            />
+        <deepLink app:uri="chess://c.ky3he4ik.dev/p/{data}" />
+        <deepLink app:uri="https://c.ky3he4ik.dev/p/{data}" />
+        <deepLink app:uri="http://c.ky3he4ik.dev/p/{data}" />
+    </fragment>
     <fragment
         android:id="@+id/addUser"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.users.AddUserFragment"

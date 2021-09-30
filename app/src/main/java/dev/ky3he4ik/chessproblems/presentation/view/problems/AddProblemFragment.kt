@@ -12,12 +12,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddProblemFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
+import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemMovesListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemPositionListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.AddProblemViewModel
@@ -114,6 +116,26 @@ class AddProblemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val data = navArgs<AddProblemFragmentArgs>().value.data
+        if (data.isNotEmpty()) {
+            val problem = ProblemOperations.fromUrl(data)
+            if (problem != null) {
+                binding.title.setText(problem.title)
+                binding.description.setText(problem.description)
+                binding.difficulty.setText(problem.difficulty.toString())
+                binding.whiteStarts.isChecked = problem.whiteStarts
+                problem.moves.forEach {
+                    (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(it.posStart, it.posEnd)
+                }
+                problem.figurePosition.forEach {
+                    val adapter = when (it.isWhite) {
+                        true -> binding.whitePositions.adapter
+                        false -> binding.blackPositions.adapter
+                    }
+                    (adapter as AddProblemPositionListItemAdapter).addSection(it.code)
+                }
+            }
+        }
         viewModel = ViewModelProvider(this).get(AddProblemViewModel::class.java)
         viewModel.image.observe(viewLifecycleOwner, {
             if (it == null) {

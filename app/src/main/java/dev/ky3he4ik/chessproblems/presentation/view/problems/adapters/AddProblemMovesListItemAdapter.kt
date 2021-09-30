@@ -40,8 +40,8 @@ class AddProblemMovesListItemAdapter :
         }
     }
 
-    fun addSection() {
-        data.value?.add(Pair("", ""))
+    fun addSection(posStart: String = "", posEnd: String = "") {
+        data.value?.add(Pair(posStart, posEnd))
         notifyItemInserted(data.value!!.size - 1)
     }
 

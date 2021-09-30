@@ -11,16 +11,16 @@ import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 class ProblemInfoDTO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "problem_id")
-    override val problemId: Int,
-    override val title: String,
-    override val image: String?,
-    override val description: String,
-    override val difficulty: Int,
+    override var problemId: Int,
+    override var title: String,
+    override var image: String?,
+    override var description: String,
+    override var difficulty: Int,
     @ColumnInfo(name = "white_starts")
-    override val whiteStarts: Boolean,
-    override val moves: List<ProblemMove>,
+    override var whiteStarts: Boolean,
+    override var moves: List<ProblemMove>,
     @ColumnInfo(name = "figure_position")
-    override val figurePosition: List<FigurePosition>,
+    override var figurePosition: List<FigurePosition>,
 ) : ProblemInfo(
     problemId,
     title,
@@ -40,5 +40,16 @@ class ProblemInfoDTO(
         problem.whiteStarts,
         problem.moves,
         problem.figurePosition,
+    )
+
+    fun toSuper() = ProblemInfo(
+        problemId,
+        title,
+        image,
+        description,
+        difficulty,
+        whiteStarts,
+        moves,
+        figurePosition,
     )
 }

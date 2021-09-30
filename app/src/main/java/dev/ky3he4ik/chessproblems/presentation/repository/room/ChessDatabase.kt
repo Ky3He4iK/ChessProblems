@@ -12,11 +12,6 @@ import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.ProblemsDAO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.UsersDAO
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.sqlite.db.SupportSQLiteDatabase
-
-import androidx.room.migration.Migration
-
-
 
 
 @Database(

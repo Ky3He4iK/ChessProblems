@@ -7,6 +7,4 @@ open class UserInfo(
     open val rating: Int = 0,
     open val solved: Int = 0,
     open val solvedProblems: List<SolvedProblem>,
-) {
-    constructor(): this(0, "", null, 0, 0, arrayListOf())
-}
+)
