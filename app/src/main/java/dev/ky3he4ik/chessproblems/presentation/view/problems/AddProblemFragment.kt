@@ -107,15 +107,15 @@ class AddProblemFragment : Fragment() {
             requireActivity().activityResultRegistry.register(
                 "key",
                 ActivityResultContracts.OpenDocument()
-            ) { result ->
-                if (result != null) {
+            ) {
+                if (it != null) {
                     requireActivity().applicationContext.contentResolver
-                        .takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    viewModel.setImage(result.toString())
+                        .takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    viewModel.setImage(it.toString())
                 }
             }.launch(arrayOf("image/*"))
         } catch (e: Exception) {
-            Log.e("Chess/AUF", e.toString(), e)
+            Log.e("Chess/APF", e.toString(), e)
         }
     }
 

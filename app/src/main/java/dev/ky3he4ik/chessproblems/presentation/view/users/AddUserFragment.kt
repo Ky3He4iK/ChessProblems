@@ -55,7 +55,14 @@ class AddUserFragment : Fragment() {
                 val solvedProblemsModel =
                     solvedProblems.value!!.map { SolvedProblem(it.first, it.second) }
                 val user =
-                    UserInfo(0, nick, null, rating, solvedProblemsModel.size, solvedProblemsModel)
+                    UserInfo(
+                        0,
+                        nick,
+                        viewModel.image.value,
+                        rating,
+                        solvedProblemsModel.size,
+                        solvedProblemsModel
+                    )
                 viewModel.addUser(user)
                 findNavController().popBackStack()
             } else {
