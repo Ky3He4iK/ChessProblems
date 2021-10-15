@@ -7,23 +7,24 @@ import dev.ky3he4ik.chessproblems.presentation.repository.room.ProblemsRepositor
 import dev.ky3he4ik.chessproblems.presentation.repository.room.UsersRepositoryImpl
 
 object Repository {
-    var problemsRepository: ProblemsRepository? = null
+    private var _problemsRepository: ProblemsRepository? = null
+    val problemsRepository: ProblemsRepository
         get() {
-            if (field == null)
-                field = MockProblemsRepository()
-            return field
+            if (_problemsRepository == null)
+                _problemsRepository = MockProblemsRepository()
+            return _problemsRepository!!
         }
-        private set
 
-    var usersRepository: UsersRepository? = null
+    private var _usersRepository: UsersRepository? = null
+    val usersRepository: UsersRepository
         get() {
-            if (field == null)
-                field = MockUsersRepository()
-            return field
+            if (_usersRepository == null)
+                _usersRepository = MockUsersRepository()
+            return _usersRepository!!
         }
 
     fun initRepository(application: Application) {
-        problemsRepository = ProblemsRepositoryImpl(application)
-        usersRepository = UsersRepositoryImpl(application)
+        _problemsRepository = _problemsRepository ?: ProblemsRepositoryImpl(application)
+        _usersRepository = _usersRepository ?: UsersRepositoryImpl(application)
     }
 }

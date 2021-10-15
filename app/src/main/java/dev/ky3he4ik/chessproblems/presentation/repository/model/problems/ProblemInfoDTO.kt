@@ -41,15 +41,4 @@ class ProblemInfoDTO(
         problem.moves,
         problem.figurePosition,
     )
-
-    fun toSuper() = ProblemInfo(
-        problemId,
-        title,
-        image,
-        description,
-        difficulty,
-        whiteStarts,
-        moves,
-        figurePosition,
-    )
 }
