@@ -17,7 +17,6 @@ import java.util.concurrent.Executors
 @Database(
     entities = [ProblemInfoDTO::class, UserInfoDTO::class],
     version = 2,
-
     exportSchema = false
 )
 @TypeConverters(DataTypeConverter::class)
@@ -45,7 +44,6 @@ abstract class ChessDatabase : RoomDatabase() {
                 ChessDatabase::class.java,
                 "chess_problems_db"
             )
-                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
         }
