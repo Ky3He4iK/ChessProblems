@@ -15,4 +15,8 @@ class AddProblemViewModel : ViewModel() {
     fun setImage(image: String?) {
         _image.value = image
     }
+
+    fun getRandomProblem(): LiveData<ProblemInfo?> {
+        return Repository.chessBlunders.getRandomProblem()
+    }
 }

@@ -21,27 +21,45 @@
                 android:layout_margin="16dp"
                 android:orientation="vertical">
 
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/textView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
                         android:layout_gravity="center_vertical"
                         android:gravity="center"
                         android:text="@string/titleNewProblem"
                         android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
                         android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/save_button"
+                        app:layout_constraintStart_toEndOf="@id/textView1"
+                        app:layout_constraintEnd_toStartOf="@id/get_button"
+                        app:layout_constraintTop_toTopOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
+                        android:layout_gravity="center_vertical"
                         android:text="@string/save" />
-                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+                    <ImageButton
+                        android:id="@+id/get_button"
+                        android:foreground="@drawable/ic_baseline_arrow_circle_down_24"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:scaleType="fitCenter"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="end"
+                        android:contentDescription="@string/download" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/textView2"

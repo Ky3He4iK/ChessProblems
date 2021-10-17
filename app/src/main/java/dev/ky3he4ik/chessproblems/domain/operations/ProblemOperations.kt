@@ -3,7 +3,6 @@ package dev.ky3he4ik.chessproblems.domain.operations
 import android.util.Log
 import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
-import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -16,7 +15,7 @@ object ProblemOperations {
         sb.append(if (problemInfo.whiteStarts) 1 else 0)
         sb.append("&m=")
         problemInfo.moves.forEach {
-            sb.append(urlencode(it.posStart)).append("--").append(urlencode(it.posEnd)).append('_')
+            sb.append(urlencode(it)).append('_')
         }
         sb.deleteAt(sb.length - 1)
         sb.append("&p=")
@@ -45,12 +44,7 @@ object ProblemOperations {
                         parts[1].toIntOrNull() ?: problemInfo.difficulty
                     "ws" -> problemInfo.whiteStarts = parts[1] == "1"
                     "m" -> {
-                        val moves = parts[1].split('_')
-                        moves.forEach { move ->
-                            val mp = move.split("--")
-                            if (mp.size == 2)
-                                problemInfo.moves += ProblemMove(urldecode(mp[0]), urldecode(mp[1]))
-                        }
+                        problemInfo.moves += parts[1].split('_').map { m -> urldecode(m) }
                     }
                     "p" -> {
                         val positions = parts[1].split('_')
@@ -75,6 +69,45 @@ object ProblemOperations {
         if (counter < 2)
             return null
         return problemInfo
+    }
+
+    fun fromFen(
+        fenString: String,
+        baseProblem: ProblemInfo
+    ): ProblemInfo? {
+        val fenInfo = fenString.split(' ')
+        if (fenInfo.size != 6)
+            return null
+
+        val linedPositions = fenInfo[0].split('/')
+
+        if (linedPositions.size != 8)
+            return null
+        for (i in 0 until 8) {
+            val line = 8 - i
+            var letterNum = 0
+            for (pos in linedPositions[i]) {
+                if ('0'.code <= pos.code && pos.code <= '9'.code)
+                    letterNum += pos.digitToInt()
+                else {
+                    val isWhite = pos.code < 'a'.code
+                    var position = pos.uppercase()
+                    if (position == "P")
+                        position = ""
+                    position += Char('a'.code + letterNum)
+                    position += line
+                    baseProblem.figurePosition += FigurePosition(isWhite, position)
+                    letterNum++
+                }
+            }
+        }
+        baseProblem.whiteStarts = fenInfo[1] == "w"
+        // todo: castling for white and black (fenInfo[2])
+        // todo: castling for pawn moves (fenInfo[3])
+        // todo: 50 moves rule (fenInfo[4])
+        // todo: move number (fenInfo[5])
+
+        return baseProblem
     }
 
     private fun urlencode(string: String): String =

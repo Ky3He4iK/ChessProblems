@@ -3,18 +3,15 @@ package dev.ky3he4ik.chessproblems.presentation.view.problems.adapters
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.ProblemListElementBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
-import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemInfoDTO
 
 class ProblemListElementAdapter(val data: List<ProblemInfo>) :
     RecyclerView.Adapter<ProblemListElementAdapter.ProblemListElementHolder>() {
@@ -44,7 +41,7 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>) :
         holder.binding.whiteStarts.text = "WhiteStarts: " + problemInfo.whiteStarts.toString()
         val sb = StringBuilder("Moves:")
         problemInfo.moves.forEach {
-            sb.append('\n').append(it.posStart).append(" - ").append(it.posEnd)
+            sb.append('\n').append(it)
         }
         holder.binding.moves.text = sb.toString()
         sb.clear().append("White figures:")

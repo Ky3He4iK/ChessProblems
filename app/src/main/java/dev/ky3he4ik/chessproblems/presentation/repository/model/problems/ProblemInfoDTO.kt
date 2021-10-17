@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
-import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 
 @Entity(tableName = "problem_info")
 class ProblemInfoDTO(
@@ -18,7 +17,7 @@ class ProblemInfoDTO(
     override var difficulty: Int,
     @ColumnInfo(name = "white_starts")
     override var whiteStarts: Boolean,
-    override var moves: List<ProblemMove>,
+    override var moves: List<String>,
     @ColumnInfo(name = "figure_position")
     override var figurePosition: List<FigurePosition>,
 ) : ProblemInfo(

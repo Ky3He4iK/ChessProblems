@@ -53,7 +53,8 @@ class AddUserFragment : Fragment() {
 
             if (nick.isNotEmpty() && rating != null) {
                 val solvedProblemsModel =
-                    solvedProblems.value!!.map { SolvedProblem(it.first, it.second) }
+                    solvedProblems.value?.map { SolvedProblem(it.first, it.second) }
+                        ?: return@setOnClickListener
                 val user =
                     UserInfo(
                         0,

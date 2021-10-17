@@ -3,6 +3,7 @@ package dev.ky3he4ik.chessproblems.presentation.repository
 import android.app.Application
 import dev.ky3he4ik.chessproblems.presentation.repository.mock.MockProblemsRepository
 import dev.ky3he4ik.chessproblems.presentation.repository.mock.MockUsersRepository
+import dev.ky3he4ik.chessproblems.presentation.repository.network.chessblunders.ChessBlunders
 import dev.ky3he4ik.chessproblems.presentation.repository.room.ProblemsRepositoryImpl
 import dev.ky3he4ik.chessproblems.presentation.repository.room.UsersRepositoryImpl
 
@@ -22,6 +23,15 @@ object Repository {
                 _usersRepository = MockUsersRepository()
             return _usersRepository!!
         }
+
+    private var _chessBlunders: ChessBlunders? = null
+    val chessBlunders: ChessBlunders
+        get() {
+            if (_chessBlunders == null)
+                _chessBlunders = ChessBlunders()
+            return _chessBlunders!!
+        }
+
 
     fun initRepository(application: Application) {
         _problemsRepository = _problemsRepository ?: ProblemsRepositoryImpl(application)

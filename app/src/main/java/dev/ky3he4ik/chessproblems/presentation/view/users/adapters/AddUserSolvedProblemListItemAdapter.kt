@@ -3,7 +3,6 @@ package dev.ky3he4ik.chessproblems.presentation.view.users.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.UserSolvedProblemListItemBinding
@@ -47,7 +46,7 @@ class AddUserSolvedProblemListItemAdapter :
     }
 
     fun addSection() {
-        data.value?.add(Pair(0, 0))
+        data.value?.add(Pair(0, 0)) ?: return
         notifyItemInserted(data.value!!.size - 1)
     }
 

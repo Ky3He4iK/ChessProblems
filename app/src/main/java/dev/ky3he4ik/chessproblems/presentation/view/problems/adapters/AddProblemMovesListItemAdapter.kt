@@ -9,7 +9,7 @@ import dev.ky3he4ik.chessproblems.databinding.ProblemMovesListItemBinding
 
 class AddProblemMovesListItemAdapter :
     RecyclerView.Adapter<AddProblemMovesListItemAdapter.ProblemMovesHolder>() {
-    val data = MutableLiveData<ArrayList<Pair<String, String>>>(arrayListOf())
+    val data = MutableLiveData<ArrayList<String>>(arrayListOf())
 
     override fun getItemCount(): Int {
         return data.value?.size ?: 0
@@ -29,20 +29,24 @@ class AddProblemMovesListItemAdapter :
     }
 
     override fun onBindViewHolder(movesHolder: ProblemMovesHolder, position: Int) {
-        val move = data.value!![position]
-        movesHolder.binding.movesFrom.setText(move.first)
-        movesHolder.binding.movesFrom.addTextChangedListener {
-            data.value?.set(position, Pair(it.toString(), data.value!![position].second))
-        }
-        movesHolder.binding.movesTo.setText(move.second)
-        movesHolder.binding.movesTo.addTextChangedListener {
-            data.value?.set(position, Pair(data.value!![position].first, it.toString()))
+        val moves = data.value ?: return
+        movesHolder.binding.move.setText(moves[position])
+        movesHolder.binding.move.addTextChangedListener {
+            data.value?.set(position, it.toString())
         }
     }
 
-    fun addSection(posStart: String = "", posEnd: String = "") {
-        data.value?.add(Pair(posStart, posEnd))
+    fun addSection(pos: String = "") {
+        data.value?.add(pos) ?: return
         notifyItemInserted(data.value!!.size - 1)
+    }
+
+    fun clear() {
+        if (data.value == null)
+            data.value = arrayListOf()
+        val size = data.value!!.size
+        data.value?.clear()
+        notifyItemRangeRemoved(0, size)
     }
 
     class ProblemMovesHolder(val binding: ProblemMovesListItemBinding) :

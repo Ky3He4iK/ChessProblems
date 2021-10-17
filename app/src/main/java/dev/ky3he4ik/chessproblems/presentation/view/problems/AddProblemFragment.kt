@@ -19,7 +19,6 @@ import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddProblemFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
-import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemMovesListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemPositionListItemAdapter
@@ -28,6 +27,8 @@ import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.AddProblemView
 class AddProblemFragment : Fragment() {
     private lateinit var viewModel: AddProblemViewModel
     private lateinit var binding: AddProblemFragmentBinding
+    private var gettingProblem = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,20 +67,35 @@ class AddProblemFragment : Fragment() {
             true
         }
 
+        binding.getButton.setOnClickListener {
+            if (gettingProblem) {
+                Toast.makeText(context, "Already loading", Toast.LENGTH_SHORT).show()
+            } else {
+                gettingProblem = true
+                Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
+                viewModel.getRandomProblem().observe(viewLifecycleOwner) { value: ProblemInfo? ->
+                    gettingProblem = false
+                    if (value == null)
+                        Toast.makeText(context, "Can't get data", Toast.LENGTH_SHORT).show()
+                    else
+                        setFromProblemInfo(value)
+                }
+            }
+        }
+
         binding.saveButton.setOnClickListener {
             val title = binding.title.text.toString()
             val description = binding.description.text.toString()
             val difficulty = binding.difficulty.text.toString().toIntOrNull()
             val whiteStarts = binding.whiteStarts.isChecked
-            val movesRaw = (binding.moves.adapter as AddProblemMovesListItemAdapter).data.value
+            val moves = (binding.moves.adapter as AddProblemMovesListItemAdapter).data.value
             val whitePositions =
                 (binding.whitePositions.adapter as AddProblemPositionListItemAdapter).data.value
             val blackPositions =
                 (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).data.value
-            if (title.isNotEmpty() && description.isNotEmpty() && difficulty != null &&
-                !movesRaw.isNullOrEmpty() && !whitePositions.isNullOrEmpty() && !blackPositions.isNullOrEmpty()
+            if (title.isNotEmpty() && difficulty != null &&
+                !moves.isNullOrEmpty() && !whitePositions.isNullOrEmpty() && !blackPositions.isNullOrEmpty()
             ) {
-                val moves = movesRaw.map { ProblemMove(it.first, it.second) }
                 val positions = whitePositions.map { FigurePosition(true, it) } +
                         blackPositions.map { FigurePosition(false, it) }
                 val problem =
@@ -90,7 +106,7 @@ class AddProblemFragment : Fragment() {
                         description,
                         difficulty,
                         whiteStarts,
-                        moves.filter { it.posStart.isNotEmpty() && it.posEnd.isNotEmpty() },
+                        moves.filter { it.isNotEmpty() },
                         positions.filter { it.code.isNotEmpty() }
                     )
                 viewModel.addProblem(problem)
@@ -122,28 +138,11 @@ class AddProblemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val data = navArgs<AddProblemFragmentArgs>().value.data
-        if (!data.isNullOrEmpty()) {
-            val problem = ProblemOperations.fromUrl(data)
-            if (problem != null) {
-                binding.title.setText(problem.title)
-                binding.description.setText(problem.description)
-                binding.difficulty.setText(problem.difficulty.toString())
-                binding.whiteStarts.isChecked = problem.whiteStarts
-                problem.moves.forEach {
-                    (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(
-                        it.posStart,
-                        it.posEnd
-                    )
-                }
-                problem.figurePosition.forEach {
-                    val adapter = when (it.isWhite) {
-                        true -> binding.whitePositions.adapter
-                        false -> binding.blackPositions.adapter
-                    }
-                    (adapter as AddProblemPositionListItemAdapter).addSection(it.code)
-                }
-            }
-        }
+        if (data.isNullOrEmpty())
+            setFromProblemInfo(null)
+        else
+            setFromProblemInfo(ProblemOperations.fromUrl(data))
+
         viewModel = ViewModelProvider(this).get(AddProblemViewModel::class.java)
         viewModel.image.observe(viewLifecycleOwner, {
             if (it == null) {
@@ -163,5 +162,26 @@ class AddProblemFragment : Fragment() {
                 Log.e("Chess/AUF", e.toString(), e)
             }
         })
+    }
+
+    private fun setFromProblemInfo(problem: ProblemInfo?) {
+        binding.title.setText(problem?.title ?: "")
+        binding.description.setText(problem?.description ?: "")
+        binding.difficulty.setText(problem?.difficulty?.toString() ?: "")
+        binding.whiteStarts.isChecked = problem?.whiteStarts ?: true
+        (binding.moves.adapter as AddProblemMovesListItemAdapter).clear()
+        problem?.moves?.forEach {
+            (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(it)
+        }
+        (binding.whitePositions.adapter as AddProblemPositionListItemAdapter).clear()
+        (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).clear()
+        problem?.figurePosition?.forEach {
+            val adapter = when (it.isWhite) {
+                true -> binding.whitePositions.adapter
+                false -> binding.blackPositions.adapter
+            }
+            (adapter as AddProblemPositionListItemAdapter).addSection(it.code)
+        }
+
     }
 }
