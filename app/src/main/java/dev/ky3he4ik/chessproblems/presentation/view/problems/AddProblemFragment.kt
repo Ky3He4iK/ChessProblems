@@ -169,12 +169,15 @@ class AddProblemFragment : Fragment() {
         binding.description.setText(problem?.description ?: "")
         binding.difficulty.setText(problem?.difficulty?.toString() ?: "")
         binding.whiteStarts.isChecked = problem?.whiteStarts ?: true
+        binding.moves.removeAllViewsInLayout()
         (binding.moves.adapter as AddProblemMovesListItemAdapter).clear()
         problem?.moves?.forEach {
             (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(it)
         }
         (binding.whitePositions.adapter as AddProblemPositionListItemAdapter).clear()
+        binding.whitePositions.removeAllViewsInLayout()
         (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).clear()
+        binding.blackPositions.removeAllViewsInLayout()
         problem?.figurePosition?.forEach {
             val adapter = when (it.isWhite) {
                 true -> binding.whitePositions.adapter
