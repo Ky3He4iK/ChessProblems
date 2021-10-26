@@ -1,4 +1,4 @@
-package dev.ky3he4ik.chessproblems.presentation.view.chess
+package dev.ky3he4ik.chessproblems.presentation.view.chess.utils
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,7 +7,7 @@ import android.util.Log
 
 
 object BitmapStorage {
-    private val loadedBitmap: HashMap<Int, Bitmap?> = hashMapOf()
+    private val loadedBitmap: HashMap<Int, Bitmap> = hashMapOf()
 
     private fun loadBitmap(bitmapId: Int, context: Context): Bitmap? {
         try {
@@ -22,11 +22,8 @@ object BitmapStorage {
         var bitmap = loadedBitmap[bitmapId]
         if (bitmap != null)
             return bitmap
-        bitmap = loadBitmap(bitmapId, context)
-        if (bitmap != null) {
-            loadedBitmap[bitmapId] = bitmap
-            return bitmap
-        }
-        return null
+        bitmap = loadBitmap(bitmapId, context) ?: return null
+        loadedBitmap[bitmapId] = bitmap
+        return bitmap
     }
 }

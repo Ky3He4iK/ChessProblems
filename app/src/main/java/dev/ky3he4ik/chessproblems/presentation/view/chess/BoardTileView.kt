@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import dev.ky3he4ik.chessproblems.R
+import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.BitmapStorage
+import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
 
 class BoardTileView : View {
     private var backgroundBitmap: Bitmap? = null
@@ -25,7 +27,7 @@ class BoardTileView : View {
             onCoordChanged()
         }
 
-    val isWhiteTile: Boolean
+    private val isWhiteTile: Boolean
         get() = (posX + posY) % 2 == 1
 
     var isSelectedTile: Boolean = false
@@ -101,10 +103,19 @@ class BoardTileView : View {
         )
     }
 
+    constructor(posX: Int, posY: Int, context: Context?) : super(context) {
+        this.posX = posX
+        this.posY = posY
+    }
+
     constructor(context: Context?) : super(context)
 
-    constructor(context: Context?, atts: AttributeSet?) : super(context, atts)
+    constructor(posX: Int, posY: Int, context: Context?, atts: AttributeSet?) : super(context, atts) {
+        this.posX = posX
+        this.posY = posY
+    }
 
+    constructor(context: Context?, atts: AttributeSet?) : super(context, atts)
 
     init {
         isFocusable = true

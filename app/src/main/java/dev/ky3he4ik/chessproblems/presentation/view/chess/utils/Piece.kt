@@ -1,4 +1,4 @@
-package dev.ky3he4ik.chessproblems.presentation.view.chess
+package dev.ky3he4ik.chessproblems.presentation.view.chess.utils
 
 import dev.ky3he4ik.chessproblems.R
 

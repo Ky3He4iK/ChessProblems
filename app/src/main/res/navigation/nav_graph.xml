@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_userList_to_problemList"
             app:destination="@id/problemList" />
+        <action
+            android:id="@+id/action_userList_to_boardDemo"
+            app:destination="@id/boardDemo" />
     </fragment>
     <fragment
         android:id="@+id/problemList"
@@ -42,6 +45,15 @@
             app:destination="@id/addProblem" />
         <action
             android:id="@+id/action_problemList_to_userList"
-            app:destination="@id/addUser" />
+            app:destination="@id/userList" />
+        <action
+            android:id="@+id/action_problemList_to_boardDemo"
+            app:destination="@id/boardDemo" />
+    </fragment>
+    <fragment
+        android:id="@+id/boardDemo"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.chess.BoardFragment"
+        android:label="Board Demo"
+        >
     </fragment>
 </navigation>
