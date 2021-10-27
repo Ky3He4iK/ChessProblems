@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.graphics.scaleMatrix
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.BitmapStorage
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
@@ -52,36 +54,22 @@ class BoardTileView : View {
         }
 
     private fun onCoordChanged() {
-        if (posY == 0 && posX in 0..7) {
-            coordBitmap = BitmapStorage.getBitmap(
-                when (posX) {
-                    0 -> R.drawable.coord_a1
-                    1 -> R.drawable.coord_b
-                    2 -> R.drawable.coord_c
-                    3 -> R.drawable.coord_d
-                    4 -> R.drawable.coord_e
-                    5 -> R.drawable.coord_f
-                    6 -> R.drawable.coord_g
-                    7 -> R.drawable.coord_h
-                    else -> 0 // unused but necessary to kotlin
-                }, context
-            )
-        } else if (posX == 0 && posY in 0..7) {
-            coordBitmap = BitmapStorage.getBitmap(
-                when (posY) {
-                    0 -> R.drawable.coord_a1
-                    1 -> R.drawable.coord_2
-                    2 -> R.drawable.coord_3
-                    3 -> R.drawable.coord_4
-                    4 -> R.drawable.coord_5
-                    5 -> R.drawable.coord_6
-                    6 -> R.drawable.coord_7
-                    7 -> R.drawable.coord_8
-                    else -> 0 // unused but necessary to kotlin
-                }, context
-            )
-        } else
-            coordBitmap = null
+        val coordsLetter = arrayOf(
+            R.drawable.coord_a1, R.drawable.coord_b, R.drawable.coord_c,
+            R.drawable.coord_d, R.drawable.coord_e, R.drawable.coord_f, R.drawable.coord_g,
+            R.drawable.coord_h
+        )
+        val coordsNumber = arrayOf(
+            R.drawable.coord_a1, R.drawable.coord_2, R.drawable.coord_3,
+            R.drawable.coord_4, R.drawable.coord_5, R.drawable.coord_6, R.drawable.coord_7,
+            R.drawable.coord_8
+        )
+        coordBitmap = when {
+            posY == 0 && posX in 0..7 -> BitmapStorage.getBitmap(coordsLetter[posX], context)
+            posX == 0 && posY in 0..7 -> BitmapStorage.getBitmap(coordsNumber[posY], context)
+            else -> null
+        }
+        onSelectionChanged()
     }
 
     private fun onSelectionChanged() {
@@ -89,11 +77,11 @@ class BoardTileView : View {
             when {
                 isSelectedPosition && isWhiteTile ->
                     R.drawable.background_white_selected_position
-                isSelectedPosition && !isWhiteTile ->
+                isSelectedPosition ->
                     R.drawable.background_green_selected_position
                 isSelectedTile && isWhiteTile ->
                     R.drawable.background_white_selected
-                isSelectedTile && !isWhiteTile ->
+                isSelectedTile ->
                     R.drawable.background_green_selected
                 isWhiteTile ->
                     R.drawable.background_white
@@ -103,14 +91,7 @@ class BoardTileView : View {
         )
     }
 
-    constructor(posX: Int, posY: Int, context: Context?) : super(context) {
-        this.posX = posX
-        this.posY = posY
-    }
-
-    constructor(context: Context?) : super(context)
-
-    constructor(posX: Int, posY: Int, context: Context?, atts: AttributeSet?) : super(context, atts) {
+    constructor(context: Context?, posX: Int = 0, posY: Int = 0) : super(context) {
         this.posX = posX
         this.posY = posY
     }
@@ -124,9 +105,30 @@ class BoardTileView : View {
 
     public override fun onDraw(canvas: Canvas) {
         listOfNotNull(backgroundBitmap, coordBitmap, pieceBitmap).forEach {
-            matrix.setScale(width.toFloat() / it.width, height.toFloat() / it.height)
-            canvas.drawBitmap(it, matrix, paint)
+//            it.width = width
+//            it.height = height
+            val canvasBitmap =
+                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//                Bitmap.createBitmap(canvas.width, canvas.height, Bitmap.Config.ARGB_8888)
+            val temp = Canvas(canvasBitmap)
+            temp.save()
+
+
+            temp.concat(matrix)
+            temp.drawBitmap(it, Rect(0, 0, it.width, it.height), Rect(0, 0, it.width, it.height), paint)
+            temp.restore()
+
+//            matrix.setScale(width.toFloat() / it.width.toFloat(), height.toFloat() / it.height.toFloat() )
+//            matrix.setScale(it.width / width.toFloat(), it.height / height.toFloat() )
+            canvas.drawBitmap(it, scaleMatrix(width.toFloat() / it.width.toFloat(), height.toFloat() / it.height.toFloat() ), paint)
+//            canvas.drawBitmap(canvasBitmap, Rect(0, 0, width, height), Rect(0, 0, width, height), paint)
+//            canvas.drawBitmap(it, Rect(0, 0, width, height), Rect(0, 0, width, height), paint)
         }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(128, 128)
     }
 
     companion object {

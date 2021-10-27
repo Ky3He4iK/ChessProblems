@@ -11,7 +11,9 @@ object BitmapStorage {
 
     private fun loadBitmap(bitmapId: Int, context: Context): Bitmap? {
         try {
-            return BitmapFactory.decodeResource(context.resources, bitmapId)
+            val option = BitmapFactory.Options()
+            option.inMutable = true
+            return BitmapFactory.decodeResource(context.resources, bitmapId, option)
         } catch (e: Exception) {
             Log.e("BitmapStorage/load", e.message, e)
         }

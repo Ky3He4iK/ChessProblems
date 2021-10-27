@@ -3,17 +3,163 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.chess.BoardFragment" >
+    tools:context=".presentation.view.chess.BoardFragment">
 
-    <GridView
-        android:id="@+id/tile_grid"
+    <TableLayout
+        android:id="@+id/boardLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:horizontalSpacing="0dp"
-        android:verticalSpacing="0dp"
-        android:numColumns="3"
+        android:layout_gravity="center">
+        <!--<TableRow>
 
-        />
-<!--
-        tools:listitem="@layout/board_grid_element"-->
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g8" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h8" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g7" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h7" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g6" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h6" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g5" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h5" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g4" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h4" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g3" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h3" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g2" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h2" />
+        </TableRow>
+
+        <TableRow>
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/a1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/b1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/c1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/d1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/e1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/f1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/g1" />
+
+            <dev.ky3he4ik.chessproblems.presentation.view.chess.BoardTileView android:id="@+id/h1" />
+        </TableRow>-->
+    </TableLayout>
 </FrameLayout>
