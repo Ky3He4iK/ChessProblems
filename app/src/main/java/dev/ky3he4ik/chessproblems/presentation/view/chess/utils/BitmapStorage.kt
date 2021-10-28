@@ -20,7 +20,8 @@ object BitmapStorage {
         return null
     }
 
-    fun getBitmap(bitmapId: Int, context: Context): Bitmap? {
+    fun getBitmap(bitmapId: Int?, context: Context): Bitmap? {
+        bitmapId ?: return null
         var bitmap = loadedBitmap[bitmapId]
         if (bitmap != null)
             return bitmap

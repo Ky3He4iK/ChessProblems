@@ -3,54 +3,83 @@ package dev.ky3he4ik.chessproblems.presentation.view.chess
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
 import android.util.AttributeSet
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import androidx.core.graphics.scaleMatrix
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.BitmapStorage
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
+import kotlin.math.min
+
 
 class BoardTileView : View {
+    private val isWhiteTile: Boolean
+        get() = (posX + posY) % 2 == 1
+
     private var backgroundBitmap: Bitmap? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
     private var coordBitmap: Bitmap? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
     private var pieceBitmap: Bitmap? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
 
     var posX: Int = -1
         set(value) {
-            field = value
-            onCoordChanged()
+            if (field != value) {
+                field = value
+                onCoordChanged()
+            }
         }
 
     var posY: Int = -1
         set(value) {
-            field = value
-            onCoordChanged()
+            if (field != value) {
+                field = value
+                onCoordChanged()
+            }
         }
-
-    private val isWhiteTile: Boolean
-        get() = (posX + posY) % 2 == 1
 
     var isSelectedTile: Boolean = false
         set(value) {
-            field = value
-            onSelectionChanged()
+            if (field != value) {
+                field = value
+                onSelectionChanged()
+            }
         }
 
     var isSelectedPosition: Boolean = false
         set(value) {
-            field = value
-            onSelectionChanged()
+            if (field != value) {
+                field = value
+                onSelectionChanged()
+            }
         }
 
     var piece: Piece? = null
         set(value) {
-            field = value
-            if (value == null) {
-                pieceBitmap = null
-            } else
-                pieceBitmap = BitmapStorage.getBitmap(value.id, context)
+            if (field != value) {
+                field = value
+                pieceBitmap = BitmapStorage.getBitmap(value?.id, context)
+            }
         }
 
     private fun onCoordChanged() {
@@ -105,33 +134,26 @@ class BoardTileView : View {
 
     public override fun onDraw(canvas: Canvas) {
         listOfNotNull(backgroundBitmap, coordBitmap, pieceBitmap).forEach {
-//            it.width = width
-//            it.height = height
-            val canvasBitmap =
-                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//                Bitmap.createBitmap(canvas.width, canvas.height, Bitmap.Config.ARGB_8888)
-            val temp = Canvas(canvasBitmap)
-            temp.save()
-
-
-            temp.concat(matrix)
-            temp.drawBitmap(it, Rect(0, 0, it.width, it.height), Rect(0, 0, it.width, it.height), paint)
-            temp.restore()
-
-//            matrix.setScale(width.toFloat() / it.width.toFloat(), height.toFloat() / it.height.toFloat() )
-//            matrix.setScale(it.width / width.toFloat(), it.height / height.toFloat() )
-            canvas.drawBitmap(it, scaleMatrix(width.toFloat() / it.width.toFloat(), height.toFloat() / it.height.toFloat() ), paint)
-//            canvas.drawBitmap(canvasBitmap, Rect(0, 0, width, height), Rect(0, 0, width, height), paint)
-//            canvas.drawBitmap(it, Rect(0, 0, width, height), Rect(0, 0, width, height), paint)
+            canvas.drawBitmap(
+                it, scaleMatrix(
+                    width.toFloat() / it.width,
+                    height.toFloat() / it.height
+                ), null
+            )
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(128, 128)
-    }
-
-    companion object {
-        var paint = Paint()
+        val displayMetrics = resources.displayMetrics
+        Log.e(
+            "Scale", "${displayMetrics.density} ${displayMetrics.densityDpi}\n" +
+                    "${displayMetrics.heightPixels} ${displayMetrics.widthPixels}\n" +
+                    "${displayMetrics.scaledDensity} ${displayMetrics.xdpi} ${displayMetrics.ydpi}\n" +
+                    "$widthMeasureSpec $heightMeasureSpec\n"
+        )
+        val size = min(displayMetrics.heightPixels / 14, displayMetrics.widthPixels / 8)
+        Log.d("Scale", "Set $size")
+        setMeasuredDimension(size, size)
     }
 }

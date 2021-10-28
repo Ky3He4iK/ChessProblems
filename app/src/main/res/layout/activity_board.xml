@@ -7,19 +7,6 @@
     android:id="@+id/board_activity"
     tools:context=".presentation.view.chess.BoardActivity">
 
-<!--
-    <TextView
-        app:layout_constraintBottom_toTopOf="@id/boardTable"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/text"
-        android:text="text"
-        />-->
-
-
     <TableLayout
         android:id="@+id/boardTable"
         android:layout_width="wrap_content"
@@ -30,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         >
-<!--        app:layout_constraintTop_toBottomOf="@id/text"-->
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
