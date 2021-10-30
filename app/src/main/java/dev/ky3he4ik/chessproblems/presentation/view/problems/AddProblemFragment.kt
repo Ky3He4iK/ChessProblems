@@ -17,7 +17,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddProblemFragmentBinding
-import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.AddProblemMovesListItemAdapter
@@ -96,8 +95,10 @@ class AddProblemFragment : Fragment() {
             if (title.isNotEmpty() && difficulty != null &&
                 !moves.isNullOrEmpty() && !whitePositions.isNullOrEmpty() && !blackPositions.isNullOrEmpty()
             ) {
-                val positions = whitePositions.map { FigurePosition(true, it) } +
-                        blackPositions.map { FigurePosition(false, it) }
+
+                val positions = whitePositions.mapNotNull {
+                    ProblemOperations.parseFigure(it, true)
+                } + blackPositions.mapNotNull { ProblemOperations.parseFigure(it, false) }
                 val problem =
                     ProblemInfo(
                         0,
@@ -106,9 +107,10 @@ class AddProblemFragment : Fragment() {
                         description,
                         difficulty,
                         whiteStarts,
-                        moves.filter { it.isNotEmpty() },
-                        positions.filter { it.code.isNotEmpty() }
+                        listOf(),
+                        positions,
                     )
+                problem.moves = ProblemOperations.parseMoves(moves, problem)
                 viewModel.addProblem(problem)
                 findNavController().popBackStack()
             } else {
@@ -172,7 +174,7 @@ class AddProblemFragment : Fragment() {
         binding.moves.removeAllViewsInLayout()
         (binding.moves.adapter as AddProblemMovesListItemAdapter).clear()
         problem?.moves?.forEach {
-            (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(it)
+            (binding.moves.adapter as AddProblemMovesListItemAdapter).addSection(it.move)
         }
         (binding.whitePositions.adapter as AddProblemPositionListItemAdapter).clear()
         binding.whitePositions.removeAllViewsInLayout()
@@ -183,8 +185,7 @@ class AddProblemFragment : Fragment() {
                 true -> binding.whitePositions.adapter
                 false -> binding.blackPositions.adapter
             }
-            (adapter as AddProblemPositionListItemAdapter).addSection(it.code)
+            (adapter as AddProblemPositionListItemAdapter).addSection(it.toInfoString())
         }
-
     }
 }

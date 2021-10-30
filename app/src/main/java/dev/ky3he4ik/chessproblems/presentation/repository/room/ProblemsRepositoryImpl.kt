@@ -29,8 +29,8 @@ class ProblemsRepositoryImpl(application: Application) : ProblemsRepository {
         }
     }
 
-    override fun <T : ProblemInfo> getProblem(problemId: Int): T? {
-        return problemsDAO.getProblem(problemId) as T?
+    override fun <T : ProblemInfo> getProblem(problemId: Int): LiveData<T?> {
+        return problemsDAO.getProblem(problemId) as LiveData<T?>
     }
 
     override fun <T : ProblemInfo> deleteProblem(problem: T) {

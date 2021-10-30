@@ -7,6 +7,6 @@ open class ProblemInfo(
     open var description: String,
     open var difficulty: Int,
     open var whiteStarts: Boolean,
-    open var moves: List<String>,
+    open var moves: List<ProblemMove>,
     open var figurePosition: List<FigurePosition>
 )

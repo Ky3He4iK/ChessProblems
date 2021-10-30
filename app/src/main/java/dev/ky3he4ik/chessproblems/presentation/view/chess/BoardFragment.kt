@@ -50,9 +50,10 @@ class BoardFragment : Fragment() {
 //            arrayOf(binding.h1, binding.h2, binding.h3, binding.h4, binding.h5, binding.h6, binding.h7, binding.h8),
 //            )
 //        tiles = Array(8) { x -> Array(8) { y -> BoardTileView(context, x, y)} }
-
+        Log.d("BoardFragment", "intent is imminent")
         val intent = Intent(context, BoardActivity::class.java)
         startActivity(intent)
+        Log.d("BoardFragment", "intent started")
 
 
         return inflater.inflate(R.layout.board_fragment, container, false)
@@ -61,6 +62,7 @@ class BoardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Todo: viewModel with observers
+        Log.d("BoardFragment", "view created")
 //        viewModel = ViewModelProvider(this).get(AddProblemViewModel::class.java)
 //        viewModel.image.observe(viewLifecycleOwner, {
 //            if (it == null) {

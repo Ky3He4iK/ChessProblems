@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [ProblemInfoDTO::class, UserInfoDTO::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(DataTypeConverter::class)
@@ -30,24 +30,24 @@ abstract class ChessDatabase : RoomDatabase() {
         private const val NUMBER_OF_THREADS = 4
 
         val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-        val migration_2_3 = object : Migration(2, 3) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-
-                val cursor = database.query("SELECT problem_id, moves FROM problem_info")
-                val hasData = cursor.moveToFirst()
-                if (!hasData)
-                    return
-                val movesColumn = cursor.getColumnIndex("moves")
-                val idColumn = cursor.getColumnIndex("problem_id")
-                do {
-                    val moves = DataTypeConverter.stringToProblemMoves(cursor.getString(movesColumn))
-                    val problem_id = cursor.getInt(idColumn)
-                    val moves_arr = moves.map { "${it.posStart}-${it.posEnd}"}
-                    val moves_str = DataTypeConverter.stringArrayToString(moves_arr)
-                    database.execSQL("UPDATE problem_info SET moves='${moves_str}' WHERE problem_id=${problem_id}")
-                } while (cursor.moveToNext())
-            }
-        }
+//        val migration_2_3 = object : Migration(2, 3) {
+//            override fun migrate(database: SupportSQLiteDatabase) {
+//
+//                val cursor = database.query("SELECT problem_id, moves FROM problem_info")
+//                val hasData = cursor.moveToFirst()
+//                if (!hasData)
+//                    return
+//                val movesColumn = cursor.getColumnIndex("moves")
+//                val idColumn = cursor.getColumnIndex("problem_id")
+//                do {
+//                    val moves = DataTypeConverter.stringToProblemMoves(cursor.getString(movesColumn))
+//                    val problem_id = cursor.getInt(idColumn)
+//                    val moves_arr = moves.map { "${it.posStart}-${it.posEnd}"}
+//                    val moves_str = DataTypeConverter.stringArrayToString(moves_arr)
+//                    database.execSQL("UPDATE problem_info SET moves='${moves_str}' WHERE problem_id=${problem_id}")
+//                } while (cursor.moveToNext())
+//            }
+//        }
 
         fun getInstance(context: Context): ChessDatabase {
             return instance ?: synchronized(this) {
@@ -62,7 +62,7 @@ abstract class ChessDatabase : RoomDatabase() {
                 "chess_problems_db"
             )
                 .fallbackToDestructiveMigration()
-                .addMigrations(migration_2_3)
+//                .addMigrations(migration_2_3)
                 .build()
         }
     }

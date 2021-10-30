@@ -19,6 +19,6 @@ interface ProblemsDAO {
     fun getAllProblems(): LiveData<List<ProblemInfoDTO>>
 
     @Query("SELECT * FROM problem_info WHERE problem_id = :problemId")
-    fun getProblem(problemId: Int): ProblemInfoDTO?
+    fun getProblem(problemId: Int): LiveData<ProblemInfoDTO?>
 
 }

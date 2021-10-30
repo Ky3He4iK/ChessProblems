@@ -41,16 +41,17 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>) :
         holder.binding.whiteStarts.text = "WhiteStarts: " + problemInfo.whiteStarts.toString()
         val sb = StringBuilder("Moves:")
         problemInfo.moves.forEach {
-            sb.append('\n').append(it)
+            sb.append('\n').append(it.move)
         }
         holder.binding.moves.text = sb.toString()
         sb.clear().append("White figures:")
         val sbB = StringBuilder("\n\nBlack figures:")
         problemInfo.figurePosition.forEach {
+            val s = "\n${it.figure ?: ' '}${it.letter}${it.number}"
             if (it.isWhite)
-                sb.append('\n').append(it.code)
+                sb.append(s)
             else
-                sbB.append('\n').append(it.code)
+                sbB.append(s)
         }
         sb.append(sbB)
         holder.binding.positions.text = sb.toString()

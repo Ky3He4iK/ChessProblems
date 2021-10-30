@@ -1,8 +1,6 @@
 package dev.ky3he4ik.chessproblems.presentation.repository
 
 import android.app.Application
-import dev.ky3he4ik.chessproblems.presentation.repository.mock.MockProblemsRepository
-import dev.ky3he4ik.chessproblems.presentation.repository.mock.MockUsersRepository
 import dev.ky3he4ik.chessproblems.presentation.repository.network.chessblunders.ChessBlunders
 import dev.ky3he4ik.chessproblems.presentation.repository.room.ProblemsRepositoryImpl
 import dev.ky3he4ik.chessproblems.presentation.repository.room.UsersRepositoryImpl
@@ -11,17 +9,13 @@ object Repository {
     private var _problemsRepository: ProblemsRepository? = null
     val problemsRepository: ProblemsRepository
         get() {
-            if (_problemsRepository == null)
-                _problemsRepository = MockProblemsRepository()
-            return _problemsRepository!!
+            return _problemsRepository ?: throw RuntimeException("Repository is not initiated!")
         }
 
     private var _usersRepository: UsersRepository? = null
     val usersRepository: UsersRepository
         get() {
-            if (_usersRepository == null)
-                _usersRepository = MockUsersRepository()
-            return _usersRepository!!
+            return _usersRepository ?: throw RuntimeException("Repository is not initiated!")
         }
 
     private var _chessBlunders: ChessBlunders? = null

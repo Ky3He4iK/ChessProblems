@@ -67,4 +67,7 @@ dependencies {
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+
+    // Regexp with named groups
+    implementation 'com.github.tony19:named-regexp:0.2.6'
 }

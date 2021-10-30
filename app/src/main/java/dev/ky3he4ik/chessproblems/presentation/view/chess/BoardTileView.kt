@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.core.graphics.scaleMatrix
 import dev.ky3he4ik.chessproblems.R
@@ -74,6 +72,14 @@ class BoardTileView : View {
             }
         }
 
+    var isBoardFlipped: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                onCoordChanged()
+            }
+        }
+
     var piece: Piece? = null
         set(value) {
             if (field != value) {
@@ -83,19 +89,23 @@ class BoardTileView : View {
         }
 
     private fun onCoordChanged() {
-        val coordsLetter = arrayOf(
-            R.drawable.coord_a1, R.drawable.coord_b, R.drawable.coord_c,
-            R.drawable.coord_d, R.drawable.coord_e, R.drawable.coord_f, R.drawable.coord_g,
-            R.drawable.coord_h
-        )
-        val coordsNumber = arrayOf(
-            R.drawable.coord_a1, R.drawable.coord_2, R.drawable.coord_3,
-            R.drawable.coord_4, R.drawable.coord_5, R.drawable.coord_6, R.drawable.coord_7,
-            R.drawable.coord_8
-        )
         coordBitmap = when {
-            posY == 0 && posX in 0..7 -> BitmapStorage.getBitmap(coordsLetter[posX], context)
-            posX == 0 && posY in 0..7 -> BitmapStorage.getBitmap(coordsNumber[posY], context)
+            !isBoardFlipped && posY == 0 && posX in 0..7 -> BitmapStorage.getBitmap(
+                coordsLetter[posX],
+                context
+            )
+            isBoardFlipped && posY == 7 && posX in 0..7 -> BitmapStorage.getBitmap(
+                coordsLetterReversed[7 - posX],
+                context
+            )
+            isBoardFlipped && posX == 0 && posY in 0..7 -> BitmapStorage.getBitmap(
+                coordsNumber[posY],
+                context
+            )
+            !isBoardFlipped && posX == 7 && posY in 0..7 -> BitmapStorage.getBitmap(
+                coordsNumber[7 - posY],
+                context
+            )
             else -> null
         }
         onSelectionChanged()
@@ -104,15 +114,15 @@ class BoardTileView : View {
     private fun onSelectionChanged() {
         backgroundBitmap = BitmapStorage.getBitmap(
             when {
-                isSelectedPosition && isWhiteTile ->
+                isSelectedPosition && isWhiteTile != isBoardFlipped ->
                     R.drawable.background_white_selected_position
                 isSelectedPosition ->
                     R.drawable.background_green_selected_position
-                isSelectedTile && isWhiteTile ->
+                isSelectedTile && isWhiteTile != isBoardFlipped ->
                     R.drawable.background_white_selected
                 isSelectedTile ->
                     R.drawable.background_green_selected
-                isWhiteTile ->
+                isWhiteTile != isBoardFlipped ->
                     R.drawable.background_white
                 else ->
                     R.drawable.background_green
@@ -146,14 +156,32 @@ class BoardTileView : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val displayMetrics = resources.displayMetrics
-        Log.e(
-            "Scale", "${displayMetrics.density} ${displayMetrics.densityDpi}\n" +
-                    "${displayMetrics.heightPixels} ${displayMetrics.widthPixels}\n" +
-                    "${displayMetrics.scaledDensity} ${displayMetrics.xdpi} ${displayMetrics.ydpi}\n" +
-                    "$widthMeasureSpec $heightMeasureSpec\n"
-        )
+//        Log.e(
+//            "Scale", "${displayMetrics.density} ${displayMetrics.densityDpi}\n" +
+//                    "${displayMetrics.heightPixels} ${displayMetrics.widthPixels}\n" +
+//                    "${displayMetrics.scaledDensity} ${displayMetrics.xdpi} ${displayMetrics.ydpi}\n" +
+//                    "$widthMeasureSpec $heightMeasureSpec\n"
+//        )
         val size = min(displayMetrics.heightPixels / 14, displayMetrics.widthPixels / 8)
-        Log.d("Scale", "Set $size")
+//        Log.d("Scale", "Set $size")
         setMeasuredDimension(size, size)
+    }
+
+    companion object {
+        val coordsLetter = arrayOf(
+            R.drawable.coord_a1, R.drawable.coord_b, R.drawable.coord_c,
+            R.drawable.coord_d, R.drawable.coord_e, R.drawable.coord_f, R.drawable.coord_g,
+            R.drawable.coord_h
+        )
+        val coordsLetterReversed = arrayOf(
+            R.drawable.coord_a, R.drawable.coord_b, R.drawable.coord_c,
+            R.drawable.coord_d, R.drawable.coord_e, R.drawable.coord_f, R.drawable.coord_g,
+            R.drawable.coord_h8
+        )
+        val coordsNumber = arrayOf(
+            R.drawable.coord_1, R.drawable.coord_2, R.drawable.coord_3,
+            R.drawable.coord_4, R.drawable.coord_5, R.drawable.coord_6, R.drawable.coord_7,
+            R.drawable.coord_8
+        )
     }
 }

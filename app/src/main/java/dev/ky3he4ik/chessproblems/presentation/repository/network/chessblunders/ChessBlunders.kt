@@ -21,6 +21,7 @@ class ChessBlunders {
                 response: Response<ChessBlunderResponse?>
             ) {
                 if (response.isSuccessful && response.body() != null) {
+                    response.body()?.data?.toString()?.let { Log.d("ChessBlunder/get", it) }
                     info.value = response.body()?.data?.toProblemInfo()
                 }
             }
