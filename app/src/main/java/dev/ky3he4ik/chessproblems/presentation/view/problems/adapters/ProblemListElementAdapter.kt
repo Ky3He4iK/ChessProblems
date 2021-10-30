@@ -58,20 +58,6 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>, val context: Contex
         }
         sb.append(sbB)
         holder.binding.positions.text = sb.toString()
-        if (problemInfo.image != null) {
-            try {
-                holder.binding.image.setImageBitmap(
-                    BitmapFactory.decodeFileDescriptor(
-                        holder.binding.root.context.contentResolver.openFileDescriptor(
-                            Uri.parse(problemInfo.image), "r"
-                        )?.fileDescriptor
-                    )
-                )
-            } catch (e: Exception) {
-                holder.binding.image.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
-                Log.e("Chess/PLEA", e.toString(), e)
-            }
-        }
         holder.binding.shareImage.setOnClickListener {
             Toast.makeText(context, "Temporary not working", Toast.LENGTH_SHORT).show()
             return@setOnClickListener

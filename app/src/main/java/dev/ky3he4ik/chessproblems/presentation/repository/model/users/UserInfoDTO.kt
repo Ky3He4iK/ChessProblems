@@ -1,50 +1,63 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.model.users
 
-import androidx.room.*
-import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
+import androidx.room.Embedded
+import androidx.room.Ignore
+import androidx.room.Relation
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 
-@Entity(tableName = "user_info")
 class UserInfoDTO(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "user_id")
-    override val userId: Int,
-    override val nick: String,
-    override val image: String?,
-    override val rating: Int = 0,
-    override val solved: Int = 0,
-
-    @ColumnInfo(name = "solved_problems")
-    @Relation(parentColumn = "user_id", entityColumn = "user_id")
-    override val solvedProblems: List<SolvedProblem>,
-    override val mail: String,
-
-    @ColumnInfo(name = "roleLevel")
-    override val roleLevel: Int,
+    @Embedded
+    val userDTO: UserDTO,
 
     @Relation(parentColumn = "user_id", entityColumn = "user_id")
-    override val tokens: UserTokens?,
+    override val solvedProblems: List<SolvedProblemDTO>,
+
+    @Relation(parentColumn = "user_id", entityColumn = "user_id")
+    override val tokens: UserTokensDTO?,
 ) : UserInfo(
-    userId,
-    nick,
-    image,
-    rating,
-    solved,
+    userDTO.userId,
+    userDTO.nick,
+    userDTO.image,
+    userDTO.rating,
+    userDTO.solved,
     solvedProblems,
-    mail,
-    roleLevel,
-    tokens,
+    userDTO.mail,
+    userDTO.roleLevel,
+    tokens
 ) {
-    constructor(user: UserInfo): this(
-        user.userId,
-        user.nick,
-        user.image,
-        user.rating,
-        user.solved,
-        user.solvedProblems,
-        user.mail,
-        user.roleLevel,
-        user.tokens,
+    constructor(user: UserInfo) : this(
+        UserDTO(
+            user.userId,
+            user.nick,
+            user.image,
+            user.rating,
+            user.solved,
+            user.mail,
+            user.roleLevel,
+        ),
+        user.solvedProblems.map { SolvedProblemDTO(user.userId, it) },
+        UserTokensDTO(user.userId, user.tokens?: UserTokens()),
     )
+
+    @Ignore
+    override val userId: Int = userDTO.userId
+
+    @Ignore
+    override val nick: String = userDTO.nick
+
+    @Ignore
+    override val image: String? = userDTO.image
+
+    @Ignore
+    override val rating: Int = userDTO.rating
+
+    @Ignore
+    override val solved: Int = userDTO.solved
+
+    @Ignore
+    override val mail: String = userDTO.mail
+
+    @Ignore
+    override val roleLevel: Int = userDTO.roleLevel
 }

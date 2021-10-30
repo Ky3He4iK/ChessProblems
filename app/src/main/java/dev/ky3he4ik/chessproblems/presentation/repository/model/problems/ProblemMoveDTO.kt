@@ -8,8 +8,9 @@ import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 
 
 @Entity(
-    tableName = "problem_move", foreignKeys = [ForeignKey(
-        entity = ProblemInfoDTO::class,
+    tableName = "problem_move",
+    foreignKeys = [ForeignKey(
+        entity = ProblemDTO::class,
         parentColumns = arrayOf("problem_id"),
         childColumns = arrayOf("problem_id"),
         onDelete = ForeignKey.CASCADE,
@@ -17,9 +18,10 @@ import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
     )]
 )
 class ProblemMoveDTO(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
     @ColumnInfo(name = "problem_id")
-    val problemId: Int,
+    val problem_id: Int,
     @ColumnInfo(name = "letter_start")
     override val letterStart: Int,
     @ColumnInfo(name = "number_start")
@@ -34,6 +36,7 @@ class ProblemMoveDTO(
     override val move: String
 ) : ProblemMove(letterStart, numberStart, letterEnd, numberEnd, promotion, isCastling, move) {
     constructor(problemId: Int, move: ProblemMove) : this(
+        0,
         problemId,
         move.letterStart,
         move.numberStart,

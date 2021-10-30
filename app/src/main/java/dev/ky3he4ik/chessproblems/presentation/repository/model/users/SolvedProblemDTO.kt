@@ -5,17 +5,17 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
-import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemInfoDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemDTO
 
 @Entity(
-    tableName = "user_tokens", foreignKeys = [ForeignKey(
-        entity = UserInfoDTO::class,
+    tableName = "solved_problem", foreignKeys = [ForeignKey(
+        entity = UserDTO::class,
         parentColumns = arrayOf("user_id"),
         childColumns = arrayOf("user_id"),
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE
     ), ForeignKey(
-        entity = ProblemInfoDTO::class,
+        entity = ProblemDTO::class,
         parentColumns = arrayOf("problem_id"),
         childColumns = arrayOf("problem_id"),
         onDelete = ForeignKey.CASCADE,
@@ -23,7 +23,9 @@ import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.Problem
     )]
 )
 class SolvedProblemDTO(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    @ColumnInfo(name = "user_id")
     val userId: Int,
     @ColumnInfo(name = "problem_id")
     override val problemId: Int,
@@ -31,6 +33,7 @@ class SolvedProblemDTO(
     override val solvingTime: Long,
 ) : SolvedProblem(problemId, solvingTime) {
     constructor(userId: Int, problem: SolvedProblem) : this(
+        0,
         userId,
         problem.problemId,
         problem.solvingTime

@@ -1,21 +1,14 @@
 package dev.ky3he4ik.chessproblems.presentation.view.problems
 
-import android.content.Intent
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddProblemFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
@@ -58,13 +51,6 @@ class AddProblemFragment : Fragment() {
             (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).addSection()
         }
         binding.whiteStarts.isChecked = true
-        binding.image.setOnClickListener {
-            setPhoto()
-        }
-        binding.image.setOnLongClickListener {
-            viewModel.setImage(null)
-            true
-        }
 
         binding.getButton.setOnClickListener {
             if (gettingProblem) {
@@ -92,25 +78,32 @@ class AddProblemFragment : Fragment() {
                 (binding.whitePositions.adapter as AddProblemPositionListItemAdapter).data.value
             val blackPositions =
                 (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).data.value
-            if (title.isNotEmpty() && difficulty != null &&
-                !moves.isNullOrEmpty() && !whitePositions.isNullOrEmpty() && !blackPositions.isNullOrEmpty()
+            val positions = (whitePositions?.mapNotNull {
+                ProblemOperations.parseFigure(it, true)
+            } ?: listOf()) + (blackPositions?.mapNotNull {
+                ProblemOperations.parseFigure(
+                    it,
+                    false
+                )
+            } ?: listOf())
+            val movesParsed = if (moves.isNullOrEmpty()) listOf() else ProblemOperations.parseMoves(
+                moves,
+                whiteStarts,
+                positions
+            )
+            if (title.isNotEmpty() && difficulty != null && !whitePositions.isNullOrEmpty()
+                && !blackPositions.isNullOrEmpty() && !movesParsed.isNullOrEmpty()
             ) {
-
-                val positions = whitePositions.mapNotNull {
-                    ProblemOperations.parseFigure(it, true)
-                } + blackPositions.mapNotNull { ProblemOperations.parseFigure(it, false) }
                 val problem =
                     ProblemInfo(
                         0,
                         title,
-                        viewModel.image.value,
                         description,
                         difficulty,
                         whiteStarts,
-                        listOf(),
+                        movesParsed,
                         positions,
                     )
-                problem.moves = ProblemOperations.parseMoves(moves, problem)
                 viewModel.addProblem(problem)
                 findNavController().popBackStack()
             } else {
@@ -118,23 +111,6 @@ class AddProblemFragment : Fragment() {
             }
         }
         return binding.root
-    }
-
-    private fun setPhoto() {
-        try {
-            requireActivity().activityResultRegistry.register(
-                "key",
-                ActivityResultContracts.OpenDocument()
-            ) {
-                if (it != null) {
-                    requireActivity().applicationContext.contentResolver
-                        .takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    viewModel.setImage(it.toString())
-                }
-            }.launch(arrayOf("image/*"))
-        } catch (e: Exception) {
-            Log.e("Chess/APF", e.toString(), e)
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -147,24 +123,6 @@ class AddProblemFragment : Fragment() {
 //            setFromProblemInfo(ProblemOperations.fromUrl(data))
 
         viewModel = ViewModelProvider(this).get(AddProblemViewModel::class.java)
-        viewModel.image.observe(viewLifecycleOwner, {
-            if (it == null) {
-                binding.image.setImageResource(R.drawable.ic_baseline_add_circle_outline_24)
-                return@observe
-            }
-            try {
-                binding.image.setImageBitmap(
-                    BitmapFactory.decodeFileDescriptor(
-                        requireContext().contentResolver.openFileDescriptor(
-                            Uri.parse(it),
-                            "r"
-                        )?.fileDescriptor
-                    )
-                )
-            } catch (e: Exception) {
-                Log.e("Chess/AUF", e.toString(), e)
-            }
-        })
     }
 
     private fun setFromProblemInfo(problem: ProblemInfo?) {

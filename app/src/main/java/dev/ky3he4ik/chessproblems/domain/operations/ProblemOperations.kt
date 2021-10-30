@@ -12,7 +12,8 @@ object ProblemOperations {
 
     // Парсинг одного хода
     // Не трогать и не привлекать к сатанинским ритуалам
-    private val movesRegex = "(((?<figure>[PNBRQK]?)((?<letstart>[a-h]?)(?<numstart>[1-8]?)[\\-x]?)(?<letend>[a-h])(?<numend>[1-8])(?:\\=(?<promotion>[nbrqkNBRQK]?))?)|(?<castling>(0-0(?:-0))|(O-O(?:-O))))[+#?!]*"
+    private val movesRegex =
+        "(((?<figure>[PNBRQK]?)((?<letstart>[a-h]?)(?<numstart>[1-8]?)[\\-x]?)(?<letend>[a-h])(?<numend>[1-8])(?:\\=(?<promotion>[nbrqkNBRQK]?))?)|(?<castling>(0-0(?:-0))|(O-O(?:-O))))[+#?!]*"
     private val regex = Regex(movesRegex)
     private val regexG = Pattern.compile(movesRegex)
 
@@ -85,9 +86,8 @@ object ProblemOperations {
     }
 
     private fun fromFen(
-        fenString: String,
-        baseProblem: ProblemInfo
-    ): ProblemInfo? {
+        fenString: String
+    ): Pair<Boolean, List<FigurePosition>>? {
         val fenInfo = fenString.split(' ')
         if (fenInfo.size != 6)
             return null
@@ -96,6 +96,7 @@ object ProblemOperations {
 
         if (linedPositions.size != 8)
             return null
+        val positions = ArrayList<FigurePosition>()
         for (i in 0 until 8) {
             val line = 7 - i
             var letterNum = 0
@@ -108,18 +109,18 @@ object ProblemOperations {
                     if (position == 'P')
                         position = null
                     val letter = Char('a'.code + letterNum)
-                    baseProblem.figurePosition += FigurePosition(letter, line, position, isWhite)
+                    positions.add(FigurePosition(letter, line, position, isWhite))
                     letterNum++
                 }
             }
         }
-        baseProblem.whiteStarts = fenInfo[1] != "w"
+        val whiteStarts = fenInfo[1] != "w"
         // todo: castling for white and black (fenInfo[2])
         // todo: castling for pawn moves (fenInfo[3])
         // todo: 50 moves rule (fenInfo[4])
         // todo: move number (fenInfo[5])
 
-        return baseProblem
+        return Pair(whiteStarts, positions)
     }
 
     fun fromFenWithMoves(
@@ -127,12 +128,17 @@ object ProblemOperations {
         moves: List<String>,
         baseProblem: ProblemInfo
     ): ProblemInfo? {
-        val problem = fromFen(fenString, baseProblem) ?: return null
-        val movesArr = parseMoves(moves, problem)
-        if (movesArr.isEmpty())
-            return null
-        problem.moves = movesArr
-        return problem
+        val (whiteStarts, positions) = fromFen(fenString) ?: return null
+        val moves = parseMoves(moves, whiteStarts, positions) ?: return null
+        return ProblemInfo(
+            baseProblem.problemId,
+            baseProblem.title,
+            baseProblem.description,
+            baseProblem.difficulty,
+            whiteStarts,
+            moves,
+            positions
+        )
     }
 
     private fun urlencode(string: String): String =
@@ -155,9 +161,13 @@ object ProblemOperations {
         return Triple(null, -1, -1)
     }
 
-    fun parseMoves(pgnMoves: List<String>, startPosition: ProblemInfo): ArrayList<ProblemMove> {
+    fun parseMoves(
+        pgnMoves: List<String>,
+        whiteStarts: Boolean,
+        figurePositions: List<FigurePosition>
+    ): ArrayList<ProblemMove>? {
         val figures: Array<Array<Char?>> = Array(8) { Array(8) { null } }
-        startPosition.figurePosition.forEach {
+        figurePositions.forEach {
             figures[it.letter - 'a'][it.number] =
                 if (it.isWhite)
                     it.figure ?: 'P'
@@ -165,7 +175,7 @@ object ProblemOperations {
                     it.figure?.lowercaseChar() ?: 'p'
         }
 
-        var isWhiteMove = startPosition.whiteStarts
+        var isWhiteMove = whiteStarts
 
         val arr = arrayListOf<ProblemMove>()
 
@@ -173,7 +183,7 @@ object ProblemOperations {
             val move = move.replace('0', 'O')
             val matcher = regexG.matcher(move)
             if (!matcher.find())
-                return arrayListOf()
+                return null
             val fig = emptyToNull(matcher.group("figure"))?.get(0)
             val figure = toCasedFigure(fig ?: 'P', isWhiteMove)
 
@@ -217,10 +227,10 @@ object ProblemOperations {
                             letterEnd = 2
                             numberEnd = 7
                         }
-                        else -> return arrayListOf()
+                        else -> return null
                     }
                 } else
-                    return arrayListOf()
+                    return null
 
             //todo: source checking
             if (letterStart == null) {
@@ -300,7 +310,8 @@ object ProblemOperations {
                                 Pair(-2, 1), Pair(-2, -1), Pair(2, 1), Pair(2, -1),
                                 Pair(-1, 2), Pair(-1, -2), Pair(1, 2), Pair(1, -2),
                             )
-                            val found = variants.any { (dx, dy) -> letterEnd + dx in 0 until 8 && numberEnd + dy in 0 until 8 && figures[letterEnd + dx][numberEnd + dy] == colored }
+                            val found =
+                                variants.any { (dx, dy) -> letterEnd + dx in 0 until 8 && numberEnd + dy in 0 until 8 && figures[letterEnd + dx][numberEnd + dy] == colored }
                             for ((dx, dy) in variants) {
                                 if (letterEnd + dx in 0 until 8 && numberEnd + dy in 0 until 8 && figures[letterEnd + dx][numberEnd + dy] == colored) {
                                     letterStart = letterEnd + dx
@@ -339,7 +350,7 @@ object ProblemOperations {
             }
 
             if (numberStart == null || letterStart == null) {
-                return arrayListOf()
+                return null
             }
 
             if (!isCastling) {

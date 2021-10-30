@@ -8,7 +8,7 @@ open class FigurePosition(
 ) {
     fun toInfoString(): String {
         if (figure == null)
-            return "$letter$number"
-        return "$figure$letter$number"
+            return "$letter${number + 1}"
+        return "$figure$letter${number + 1}"
     }
 }

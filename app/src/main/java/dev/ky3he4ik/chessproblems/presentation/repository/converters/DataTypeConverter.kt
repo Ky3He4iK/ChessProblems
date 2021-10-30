@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
+import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 import java.lang.reflect.Type
 import java.util.*
 
@@ -52,4 +53,13 @@ object DataTypeConverter {
 
     @TypeConverter
     fun solvedProblemToString(someObjects: List<SolvedProblem>): String = gson.toJson(someObjects)
+
+    @TypeConverter
+    fun stringToUserTokens(data: String?): UserTokens {
+        data ?: return UserTokens()
+        return gson.fromJson(data, UserTokens::class.java)
+    }
+
+    @TypeConverter
+    fun userTokensToString(tokens: UserTokens): String = gson.toJson(tokens)
 }

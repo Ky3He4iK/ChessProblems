@@ -14,17 +14,16 @@ data class ChessBlunderData(
     val move_index: Int,
 ) {
     fun toProblemInfo(): ProblemInfo? {
-        val problem =  ProblemOperations.fromFenWithMoves(
+        val problem = ProblemOperations.fromFenWithMoves(
             fenBefore,
             forcedLine,
             ProblemInfo(
-                0, "Blunder #${id}", null, fenBefore
-                , elo,
-                true, listOf(), arrayListOf()
+                0, "Blunder #${id}", fenBefore, elo,
+                true, listOf(), listOf()
             )
         )
         if (problem == null)
-            Log.e("ChessBlunder/parse", "$fenBefore ${forcedLine.joinToString()}")
+            Log.e("ChessBlunder/parse", "$fenBefore | ${forcedLine.joinToString()}")
         return problem
     }
 }

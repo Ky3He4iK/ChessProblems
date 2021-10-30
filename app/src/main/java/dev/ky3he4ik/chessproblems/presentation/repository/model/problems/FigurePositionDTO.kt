@@ -7,8 +7,9 @@ import androidx.room.PrimaryKey
 import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 
 @Entity(
-    tableName = "figure_position", foreignKeys = [ForeignKey(
-        entity = ProblemInfoDTO::class,
+    tableName = "figure_position",
+    foreignKeys = [ForeignKey(
+        entity = ProblemDTO::class,
         parentColumns = arrayOf("problem_id"),
         childColumns = arrayOf("problem_id"),
         onDelete = ForeignKey.CASCADE,
@@ -16,9 +17,10 @@ import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
     )]
 )
 class FigurePositionDTO(
-    @PrimaryKey
-    @ColumnInfo(name = "problem_id")
-    val problemId: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+//    @ColumnInfo(name = "problem_id")
+    val problem_id: Int,
     override val letter: Char,
     override val number: Int,
     override val figure: Char?,
@@ -26,6 +28,7 @@ class FigurePositionDTO(
     override val isWhite: Boolean,
 ) : FigurePosition(letter, number, figure, isWhite) {
     constructor(problemId: Int, position: FigurePosition) : this(
+        0,
         problemId,
         position.letter,
         position.number,

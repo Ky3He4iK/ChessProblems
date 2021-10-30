@@ -1,5 +1,6 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.model.users
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -7,7 +8,7 @@ import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 
 @Entity(
     tableName = "user_tokens", foreignKeys = [ForeignKey(
-        entity = UserInfoDTO::class,
+        entity = UserDTO::class,
         parentColumns = arrayOf("user_id"),
         childColumns = arrayOf("user_id"),
         onDelete = ForeignKey.CASCADE,
@@ -16,10 +17,11 @@ import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 )
 class UserTokensDTO(
     @PrimaryKey
+    @ColumnInfo(name = "user_id")
     val userId: Int,
-    override val vk: String? = null,
-    override val google: String? = null,
-    override val yandex: String? = null,
+    override var vk: String? = null,
+    override var google: String? = null,
+    override var yandex: String? = null,
 ) : UserTokens(vk, google, yandex) {
-    constructor(tokens: UserTokens, userId: Int) : this(userId, tokens.vk, tokens.google, tokens.yandex)
+    constructor(userId: Int, tokens: UserTokens) : this(userId, tokens.vk, tokens.google, tokens.yandex)
 }

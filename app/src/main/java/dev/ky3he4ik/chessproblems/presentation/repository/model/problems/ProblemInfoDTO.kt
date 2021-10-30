@@ -1,50 +1,52 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.model.problems
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Embedded
+import androidx.room.Ignore
 import androidx.room.Relation
-import dev.ky3he4ik.chessproblems.domain.model.problems.FigurePosition
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
-import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 
-@Entity(tableName = "problem_info")
 class ProblemInfoDTO(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "problem_id")
-    override var problemId: Int,
-    override var title: String,
-    override var image: String?,
-    override var description: String,
-    override var difficulty: Int,
-
-    @ColumnInfo(name = "white_starts")
-    override var whiteStarts: Boolean,
+    @Embedded
+    val problemDTO: ProblemDTO,
 
     @Relation(parentColumn = "problem_id", entityColumn = "problem_id")
-    override var moves: List<ProblemMove>,
+    override val moves: List<ProblemMoveDTO>,
 
-    @ColumnInfo(name = "figure_position")
     @Relation(parentColumn = "problem_id", entityColumn = "problem_id")
-    override var figurePosition: List<FigurePosition>,
+    override val figurePosition: List<FigurePositionDTO>,
 ) : ProblemInfo(
-    problemId,
-    title,
-    image,
-    description,
-    difficulty,
-    whiteStarts,
-    moves,
-    figurePosition,
+    problemDTO.problemId,
+    problemDTO.title,
+    problemDTO.description,
+    problemDTO.difficulty,
+    problemDTO.whiteStarts,
+    ArrayList(moves),
+    ArrayList(figurePosition),
 ) {
     constructor(problem: ProblemInfo) : this(
-        problem.problemId,
-        problem.title,
-        problem.image,
-        problem.description,
-        problem.difficulty,
-        problem.whiteStarts,
-        problem.moves,
-        problem.figurePosition,
+        ProblemDTO(
+            problem.problemId,
+            problem.title,
+            problem.description,
+            problem.difficulty,
+            problem.whiteStarts
+        ),
+        MutableList(problem.moves.size) { ProblemMoveDTO(problem.problemId, problem.moves[it]) },
+        MutableList(problem.figurePosition.size) { FigurePositionDTO(problem.problemId, problem.figurePosition[it]) },
     )
+
+    @Ignore
+    override val problemId: Int = problemDTO.problemId
+
+    @Ignore
+    override val title: String = problemDTO.title
+
+    @Ignore
+    override val description: String = problemDTO.description
+
+    @Ignore
+    override val difficulty: Int = problemDTO.difficulty
+
+    @Ignore
+    override val whiteStarts: Boolean = problemDTO.whiteStarts
 }

@@ -15,7 +15,6 @@ import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.chess.BoardViewModel
-import kotlinx.coroutines.withTimeout
 
 class BoardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBoardBinding
@@ -133,10 +132,17 @@ class BoardActivity : AppCompatActivity() {
                         Handler(Looper.getMainLooper()).postDelayed({
                             //Do something after 100ms
                             val move = moves[currentMove]
-                            movePiece(move.letterStart, move.numberStart, move.letterEnd, move.numberEnd, move)
+                            movePiece(
+                                move.letterStart,
+                                move.numberStart,
+                                move.letterEnd,
+                                move.numberEnd,
+                                move
+                            )
                             currentMove++
                             if (currentMove >= moves.size) {
-                                Toast.makeText(applicationContext, "Solved!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, "Solved!", Toast.LENGTH_SHORT)
+                                    .show()
                                 if (problem != null)
                                     viewModel.registerProblemSolved(problem?.problemId ?: 0, 0, 0)
                                 finish()
@@ -156,7 +162,13 @@ class BoardActivity : AppCompatActivity() {
         }
     }
 
-    private fun movePiece(srcX: Int, srcY: Int, destX: Int, destY: Int, move: ProblemMove): Boolean {
+    private fun movePiece(
+        srcX: Int,
+        srcY: Int,
+        destX: Int,
+        destY: Int,
+        move: ProblemMove
+    ): Boolean {
         val source = getTile(srcX, srcY)
         val destination = getTile(destX, destY)
         // Todo: check if move allowed

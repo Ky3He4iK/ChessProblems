@@ -1,12 +1,17 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.room
 
 import android.content.Context
-import androidx.room.*
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import dev.ky3he4ik.chessproblems.presentation.repository.converters.DataTypeConverter
-import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemInfoDTO
-import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserInfoDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.FigurePositionDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemMoveDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.users.SolvedProblemDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserDTO
+import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserTokensDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.ProblemsDAO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.UsersDAO
 import java.util.concurrent.ExecutorService
@@ -14,7 +19,8 @@ import java.util.concurrent.Executors
 
 
 @Database(
-    entities = [ProblemInfoDTO::class, UserInfoDTO::class],
+    entities = [ProblemDTO::class, FigurePositionDTO::class, ProblemMoveDTO::class,
+        UserDTO::class, SolvedProblemDTO::class, UserTokensDTO::class],
     version = 5,
     exportSchema = false
 )
