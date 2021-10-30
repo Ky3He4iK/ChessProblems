@@ -95,15 +95,15 @@ class BoardTileView : View {
                 context
             )
             isBoardFlipped && posY == 7 && posX in 0..7 -> BitmapStorage.getBitmap(
-                coordsLetterReversed[7 - posX],
+                coordsLetterReversed[posX],
                 context
             )
-            isBoardFlipped && posX == 0 && posY in 0..7 -> BitmapStorage.getBitmap(
+            isBoardFlipped && posX == 7 && posY in 0..7 -> BitmapStorage.getBitmap(
                 coordsNumber[posY],
                 context
             )
-            !isBoardFlipped && posX == 7 && posY in 0..7 -> BitmapStorage.getBitmap(
-                coordsNumber[7 - posY],
+            !isBoardFlipped && posX == 0 && posY in 0..7 -> BitmapStorage.getBitmap(
+                coordsNumber[posY],
                 context
             )
             else -> null

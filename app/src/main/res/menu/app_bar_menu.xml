@@ -10,10 +10,4 @@
         android:enabled="true"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="@string/users"/>
-
-    <item
-        android:id="@+id/boardDemo"
-        android:enabled="true"
-        android:icon="@drawable/piece_white_king"
-        android:title="@string/board_demo"/>
 </menu>

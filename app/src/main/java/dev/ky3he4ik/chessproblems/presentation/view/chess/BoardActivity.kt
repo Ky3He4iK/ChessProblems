@@ -52,6 +52,11 @@ class BoardActivity : AppCompatActivity() {
         }
 
         viewModel.getProblemInfo(intent.getIntExtra(PROBLEM_ID, 0)).observe(this) {
+            if (it == null) {
+                Toast.makeText(applicationContext, "Invalid problem", Toast.LENGTH_SHORT).show()
+                finish()
+                return@observe
+            }
             problem = it
             isFlipped = !(problem?.whiteStarts ?: true) // false if no problem
             for (x in 0 until 8)
@@ -69,15 +74,12 @@ class BoardActivity : AppCompatActivity() {
                     getTile(figure.letter - 'a', figure.number).piece = piece
                 }
             }
-            if (it == null)
-                moves.clear()
-            else
-                moves = ArrayList(it.moves)
+            moves = ArrayList(it.moves)
         }
     }
 
     private fun getTile(x: Int, y: Int): BoardTileView =
-        tiles[x][if (isFlipped) 7 - y else y]
+        tiles[if (isFlipped) 7 - x else x][if (isFlipped) 7 - y else y]
 
     private fun getTile(tileNum: Int): BoardTileView = getTile(tileNum / 8, tileNum % 8)
 
@@ -126,7 +128,7 @@ class BoardActivity : AppCompatActivity() {
                     currentMove++
                     if (currentMove < moves.size) {
                         val move = moves[currentMove]
-                        movePiece(move.letterStart, move.numberStart, move.letterEnd, move.letterEnd, move)
+                        movePiece(move.letterStart, move.numberStart, move.letterEnd, move.numberEnd, move)
                         currentMove++
                     }
                     if (currentMove >= moves.size) {
