@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [ProblemInfoDTO::class, UserInfoDTO::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(DataTypeConverter::class)

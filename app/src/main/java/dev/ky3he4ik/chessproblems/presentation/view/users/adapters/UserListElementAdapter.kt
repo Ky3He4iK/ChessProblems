@@ -37,7 +37,7 @@ class UserListElementAdapter(val data: List<UserInfo>) :
         holder.binding.rating.text = "Rating: " + userInfo.rating.toString()
         holder.binding.solved.text = "Solved: " + userInfo.solved.toString()
         val sb = StringBuilder("Solved problems:")
-        userInfo.solvedProblems.forEach { sb.append("\n${it.problem_id} - ${it.solvingTime}s") }
+        userInfo.solvedProblems.forEach { sb.append("\n${it.problemId} - ${it.solvingTime}s") }
         holder.binding.solvedProblems.text = sb
         if (userInfo.image != null) {
             try {

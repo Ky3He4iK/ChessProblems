@@ -47,6 +47,7 @@ class AddUserFragment : Fragment() {
 
         binding.saveButton.setOnClickListener {
             val nick = binding.nickname.text.toString()
+            val mail = binding.mail.text.toString()
             val rating = binding.rating.text.toString().toIntOrNull()
             val solvedProblems =
                 (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
@@ -62,7 +63,10 @@ class AddUserFragment : Fragment() {
                         viewModel.image.value,
                         rating,
                         solvedProblemsModel.size,
-                        solvedProblemsModel
+                        solvedProblemsModel,
+                        mail,
+                        0,
+                        null,
                     )
                 viewModel.addUser(user)
                 findNavController().popBackStack()

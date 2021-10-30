@@ -1,10 +1,9 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.model.users
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
+import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 
 @Entity(tableName = "user_info")
 class UserInfoDTO(
@@ -15,8 +14,17 @@ class UserInfoDTO(
     override val image: String?,
     override val rating: Int = 0,
     override val solved: Int = 0,
+
     @ColumnInfo(name = "solved_problems")
+    @Relation(parentColumn = "user_id", entityColumn = "user_id")
     override val solvedProblems: List<SolvedProblem>,
+    override val mail: String,
+
+    @ColumnInfo(name = "roleLevel")
+    override val roleLevel: Int,
+
+    @Relation(parentColumn = "user_id", entityColumn = "user_id")
+    override val tokens: UserTokens?,
 ) : UserInfo(
     userId,
     nick,
@@ -24,6 +32,9 @@ class UserInfoDTO(
     rating,
     solved,
     solvedProblems,
+    mail,
+    roleLevel,
+    tokens,
 ) {
     constructor(user: UserInfo): this(
         user.userId,
@@ -32,5 +43,8 @@ class UserInfoDTO(
         user.rating,
         user.solved,
         user.solvedProblems,
+        user.mail,
+        user.roleLevel,
+        user.tokens,
     )
 }

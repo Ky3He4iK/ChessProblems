@@ -7,4 +7,7 @@ open class UserInfo(
     open val rating: Int,
     open val solved: Int,
     open val solvedProblems: List<SolvedProblem>,
+    open val mail: String,
+    open val roleLevel: Int,
+    open val tokens: UserTokens?,
 )

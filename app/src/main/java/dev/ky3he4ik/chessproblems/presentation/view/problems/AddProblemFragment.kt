@@ -139,7 +139,7 @@ class AddProblemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val data = navArgs<AddProblemFragmentArgs>().value.data
+//        val data = navArgs<AddProblemFragmentArgs>().value.data
 //        if (data.isNullOrEmpty())
 //         todo: fix loading
         setFromProblemInfo(null)
