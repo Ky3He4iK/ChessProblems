@@ -32,9 +32,6 @@
         <action
             android:id="@+id/action_userList_to_problemList"
             app:destination="@id/problemList" />
-        <action
-            android:id="@+id/action_userList_to_boardDemo"
-            app:destination="@id/boardDemo" />
     </fragment>
     <fragment
         android:id="@+id/problemList"
@@ -46,8 +43,5 @@
         <action
             android:id="@+id/action_problemList_to_userList"
             app:destination="@id/userList" />
-        <action
-            android:id="@+id/action_problemList_to_boardDemo"
-            app:destination="@id/boardDemo" />
     </fragment>
 </navigation>

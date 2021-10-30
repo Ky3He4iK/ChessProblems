@@ -1,19 +1,22 @@
 package dev.ky3he4ik.chessproblems.presentation.view.problems.adapters
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.ProblemListElementBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.operations.ProblemOperations
+import kotlin.coroutines.coroutineContext
 
-class ProblemListElementAdapter(val data: List<ProblemInfo>) :
+class ProblemListElementAdapter(val data: List<ProblemInfo>, val context: Context) :
     RecyclerView.Adapter<ProblemListElementAdapter.ProblemListElementHolder>() {
     override fun getItemCount(): Int {
         return data.size
@@ -70,6 +73,9 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>) :
             }
         }
         holder.binding.shareImage.setOnClickListener {
+            Toast.makeText(context, "Temporary not working", Toast.LENGTH_SHORT).show()
+            return@setOnClickListener
+
             val encoded = ProblemOperations.toUrl(problemInfo)
             val sendIntent = Intent(Intent.ACTION_SEND)
             sendIntent.putExtra(

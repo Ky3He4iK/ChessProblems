@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -52,13 +51,15 @@ class ProblemListFragment : Fragment() {
         RecyclerItemClickListener.registerListener(context, binding.problemRecyclerView,
             object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
-                    val data = (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data
+                    val data =
+                        (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data
                     if (position in data.indices) {
                         val intent = Intent(context, BoardActivity::class.java)
                         intent.putExtra(BoardActivity.PROBLEM_ID, data[position].problemId)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(context, "Invalid position: $position", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Invalid position: $position", Toast.LENGTH_SHORT)
+                            .show()
                         Log.e("ProblemListFragment/click", "Invalid position: $position")
                     }
                 }
@@ -73,7 +74,7 @@ class ProblemListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
 
         viewModel.getProblemsList().observe(viewLifecycleOwner, {
-            binding.problemRecyclerView.adapter = ProblemListElementAdapter(it)
+            binding.problemRecyclerView.adapter = ProblemListElementAdapter(it, context ?: return@observe)
         })
     }
 }

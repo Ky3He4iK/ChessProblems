@@ -140,10 +140,11 @@ class AddProblemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val data = navArgs<AddProblemFragmentArgs>().value.data
-        if (data.isNullOrEmpty())
-            setFromProblemInfo(null)
-        else
-            setFromProblemInfo(ProblemOperations.fromUrl(data))
+//        if (data.isNullOrEmpty())
+//         todo: fix loading
+        setFromProblemInfo(null)
+//        else
+//            setFromProblemInfo(ProblemOperations.fromUrl(data))
 
         viewModel = ViewModelProvider(this).get(AddProblemViewModel::class.java)
         viewModel.image.observe(viewLifecycleOwner, {

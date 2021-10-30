@@ -1,6 +1,8 @@
 package dev.ky3he4ik.chessproblems.presentation.view.chess
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.chess.BoardViewModel
+import kotlinx.coroutines.withTimeout
 
 class BoardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBoardBinding
@@ -127,11 +130,19 @@ class BoardActivity : AppCompatActivity() {
                 if (movePiece(selectedX, selectedY, tile.posX, tile.posY, moves[currentMove])) {
                     currentMove++
                     if (currentMove < moves.size) {
-                        val move = moves[currentMove]
-                        movePiece(move.letterStart, move.numberStart, move.letterEnd, move.numberEnd, move)
-                        currentMove++
-                    }
-                    if (currentMove >= moves.size) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            //Do something after 100ms
+                            val move = moves[currentMove]
+                            movePiece(move.letterStart, move.numberStart, move.letterEnd, move.numberEnd, move)
+                            currentMove++
+                            if (currentMove >= moves.size) {
+                                Toast.makeText(applicationContext, "Solved!", Toast.LENGTH_SHORT).show()
+                                if (problem != null)
+                                    viewModel.registerProblemSolved(problem?.problemId ?: 0, 0, 0)
+                                finish()
+                            }
+                        }, 500)
+                    } else {
                         Toast.makeText(applicationContext, "Solved!", Toast.LENGTH_SHORT).show()
                         if (problem != null)
                             viewModel.registerProblemSolved(problem?.problemId ?: 0, 0, 0)
