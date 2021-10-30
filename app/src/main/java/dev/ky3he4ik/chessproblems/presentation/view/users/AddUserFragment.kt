@@ -13,17 +13,23 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddUserFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
+import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.AddUserSolvedProblemListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.AddUserViewModel
 
 class AddUserFragment : Fragment() {
     private lateinit var viewModel: AddUserViewModel
     private lateinit var binding: AddUserFragmentBinding
+
+    private var tokens: UserTokens? = null
+    private var roleLevel: Int = UserInfo.Roles.USER.roleLevel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,8 +71,8 @@ class AddUserFragment : Fragment() {
                         solvedProblemsModel.size,
                         solvedProblemsModel,
                         mail,
-                        0,
-                        null,
+                        roleLevel,
+                        tokens,
                     )
                 viewModel.addUser(user)
                 findNavController().popBackStack()
@@ -115,5 +121,16 @@ class AddUserFragment : Fragment() {
                 Log.e("Chess/AUF", e.toString(), e)
             }
         })
+
+        val args = navArgs<AddUserFragmentArgs>().value
+        val mail = args.mail
+        val nick = args.nick
+        roleLevel = args.roleLevel
+        if (mail != null) {
+            binding.mail.setText(mail)
+            binding.mail.isEnabled = false
+        }
+        if (nick != null)
+            binding.nickname.setText(nick)
     }
 }

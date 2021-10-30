@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemListFragmentBinding
+import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
+import dev.ky3he4ik.chessproblems.presentation.repository.Repository
+import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserInfoDTO
 import dev.ky3he4ik.chessproblems.presentation.view.chess.BoardActivity
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.ProblemListElementAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListViewModel
@@ -21,6 +24,9 @@ import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListVie
 class ProblemListFragment : Fragment() {
     private lateinit var viewModel: ProblemListViewModel
     private lateinit var binding: ProblemListFragmentBinding
+
+    private var canEdit: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,18 +45,28 @@ class ProblemListFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                viewModel.deleteProblem(
-                    (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data[position]
-                )
+                if (canEdit) {
+                    viewModel.deleteProblem(
+                        (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data[position]
+                    )
+                }
             }
         }).attachToRecyclerView(binding.problemRecyclerView)
         binding.floatingActionButton.setOnClickListener {
-            val action = ProblemListFragmentDirections.actionProblemListToAddProblem()
-            it.findNavController().navigate(action)
+            if (canEdit) {
+                val action = ProblemListFragmentDirections.actionProblemListToAddProblem()
+                it.findNavController().navigate(action)
+            } else {
+                Toast.makeText(context, "Access denied", Toast.LENGTH_SHORT).show()
+            }
         }
         RecyclerItemClickListener.registerListener(context, binding.problemRecyclerView,
             object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
+                    if (Repository.activeUserId == null) {
+                        Toast.makeText(context, "No user selected", Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     val data =
                         (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data
                     if (position in data.indices) {
@@ -74,7 +90,19 @@ class ProblemListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
 
         viewModel.getProblemsList().observe(viewLifecycleOwner, {
-            binding.problemRecyclerView.adapter = ProblemListElementAdapter(it, context ?: return@observe)
+            binding.problemRecyclerView.adapter =
+                ProblemListElementAdapter(it, context ?: return@observe)
         })
+
+        Repository.activeUserId?.let {
+            Repository.usersRepository.getUser<UserInfoDTO>(it)
+                .observe(viewLifecycleOwner, { user ->
+                    if (user != null) {
+                        canEdit = user.roleLevel >= UserInfo.Roles.PREMIUM.roleLevel
+                        binding.floatingActionButton.visibility =
+                            if (canEdit) View.VISIBLE else View.GONE
+                    }
+                })
+        }
     }
 }

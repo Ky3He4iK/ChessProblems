@@ -3,6 +3,7 @@ package dev.ky3he4ik.chessproblems.presentation.viewmodel.chess
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
+import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import dev.ky3he4ik.chessproblems.presentation.repository.Repository
 
 class BoardViewModel : ViewModel() {
@@ -10,6 +11,6 @@ class BoardViewModel : ViewModel() {
         Repository.problemsRepository.getProblem(problemId)
 
     fun registerProblemSolved(problemId: Int, userId: Int, time: Long) {
-//        TODO()
+        Repository.usersRepository.addSolvedProblem(userId, SolvedProblem(problemId, time))
     }
 }

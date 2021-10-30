@@ -2,6 +2,8 @@ package dev.ky3he4ik.chessproblems.presentation.repository
 
 import android.app.Application
 import dev.ky3he4ik.chessproblems.presentation.repository.network.chessblunders.ChessBlunders
+import dev.ky3he4ik.chessproblems.presentation.repository.network.oauth2.OAuth2Provider
+import dev.ky3he4ik.chessproblems.presentation.repository.network.vk.VkAuth
 import dev.ky3he4ik.chessproblems.presentation.repository.room.ProblemsRepositoryImpl
 import dev.ky3he4ik.chessproblems.presentation.repository.room.UsersRepositoryImpl
 
@@ -26,9 +28,15 @@ object Repository {
             return _chessBlunders!!
         }
 
+    var activeUserId: Int? = null
+
 
     fun initRepository(application: Application) {
         _problemsRepository = _problemsRepository ?: ProblemsRepositoryImpl(application)
         _usersRepository = _usersRepository ?: UsersRepositoryImpl(application)
+    }
+
+    enum class OAUTH(val provider: OAuth2Provider) {
+        Vk(VkAuth())
     }
 }

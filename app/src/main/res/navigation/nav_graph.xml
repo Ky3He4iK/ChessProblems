@@ -7,13 +7,12 @@
     <fragment
         android:id="@+id/addProblem"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.AddProblemFragment"
-        android:label="AddProblem" >
+        android:label="AddProblem">
         <argument
             android:name="data"
-            app:argType="string"
-            app:nullable="true"
             android:defaultValue="@null"
-            />
+            app:argType="string"
+            app:nullable="true" />
         <deepLink app:uri="chess://c.ky3he4ik.dev/p/{data}" />
         <deepLink app:uri="https://c.ky3he4ik.dev/p/{data}" />
         <deepLink app:uri="http://c.ky3he4ik.dev/p/{data}" />
@@ -21,22 +20,40 @@
     <fragment
         android:id="@+id/addUser"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.users.AddUserFragment"
-        android:label="AddUser" />
+        android:label="AddUser">
+        <argument
+            android:name="role_level"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="mail"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="nick"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/userList"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.users.UserListFragment"
-        android:label="UserList" >
+        android:label="UserList">
         <action
             android:id="@+id/action_userList_to_addUser"
             app:destination="@id/addUser" />
         <action
             android:id="@+id/action_userList_to_problemList"
             app:destination="@id/problemList" />
+        <action
+            android:id="@+id/action_userList_to_webFragment"
+            app:destination="@id/webFragment" />
     </fragment>
     <fragment
         android:id="@+id/problemList"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.ProblemListFragment"
-        android:label="ProblemList" >
+        android:label="ProblemList">
         <action
             android:id="@+id/action_problemList_to_addProblem"
             app:destination="@id/addProblem" />
@@ -44,4 +61,31 @@
             android:id="@+id/action_problemList_to_userList"
             app:destination="@id/userList" />
     </fragment>
+    <fragment
+        android:id="@+id/webFragment"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.WebFragment"
+        android:label="WebFragment">
+        <argument
+            android:name="url"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="method"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="url_content"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_webFragment_to_addUser"
+            app:destination="@id/addUser"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"/>
+        <deepLink app:uri="https://oauth.vk.com/authorize/{url_content}" />
+    </fragment>
+
 </navigation>

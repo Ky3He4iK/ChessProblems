@@ -6,31 +6,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dev.ky3he4ik.chessproblems.databinding.ActivityMainBinding
 import dev.ky3he4ik.chessproblems.presentation.repository.Repository
 
 class MainActivity : AppCompatActivity() {
-    private var navHost: NavHostFragment? = null
+    lateinit var navHost: NavHostFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Repository.initRepository(application)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
         navHost =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        navHost?.navController?.let {
+        navHost.navController.let {
             NavigationUI.setupWithNavController(
                 findViewById<BottomNavigationView>(R.id.bottomNav),
                 it
             )
-            intent.data?.let { navHost?.navController?.navigate(it) }
+//            intent.data?.let {
+//                navHost.navController.navigate(it)
+//            }
         }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        navHost?.navController?.handleDeepLink(intent)
+        navHost.navController.handleDeepLink(intent)
     }
 }

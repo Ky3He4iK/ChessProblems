@@ -10,5 +10,5 @@ interface VkApi {
     fun getUserInfo(
         @QueryMap api_info: Map<String, String>,
         @Query("access_token") access_token: String
-    ): Call<Vk.APIResponse?>?
+    ): Call<VkAuth.APIResponse?>?
 }

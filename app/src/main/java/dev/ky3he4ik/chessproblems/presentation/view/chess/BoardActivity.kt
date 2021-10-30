@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.ky3he4ik.chessproblems.databinding.ActivityBoardBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemMove
+import dev.ky3he4ik.chessproblems.presentation.repository.Repository
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.chess.BoardViewModel
 
@@ -26,9 +27,11 @@ class BoardActivity : AppCompatActivity() {
     private var currentMove = 0
     private var moves: ArrayList<ProblemMove> = arrayListOf()
     private var isFlipped = false
+    private var timeStart: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        timeStart = System.currentTimeMillis()
         binding = ActivityBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
@@ -151,7 +154,11 @@ class BoardActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(applicationContext, "Solved!", Toast.LENGTH_SHORT).show()
                         if (problem != null)
-                            viewModel.registerProblemSolved(problem?.problemId ?: 0, 0, 0)
+                            viewModel.registerProblemSolved(
+                                problem?.problemId ?: 0,
+                                Repository.activeUserId ?: 0,
+                                System.currentTimeMillis() - timeStart
+                            )
                         finish()
                     }
                 } else {
