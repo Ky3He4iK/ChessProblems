@@ -1,10 +1,12 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.room
 
 import android.app.Application
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.presentation.repository.ProblemsRepository
+import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemInfoDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.ProblemsDAO
 
@@ -24,12 +26,37 @@ class ProblemsRepositoryImpl(application: Application) : ProblemsRepository {
         return data as LiveData<List<T>>
     }
 
-    override fun <T : ProblemInfo> addProblem(problem: T) {
+    override fun <T : ProblemInfo> getAllProblemsLive(lifecycleOwner: LifecycleOwner): LiveData<List<T>> {
+        val data = MutableLiveData<List<ProblemInfoDTO>>()
+        getAllProblemDTOsLive().observe(lifecycleOwner) { liveData ->
+            liveData.observe(lifecycleOwner) { list ->
+                ChessDatabase.databaseWriteExecutor.execute {
+                    data.postValue(list.mapNotNull {
+                        problemsDAO.getProblemInfo(it.problemId)
+                    })
+                }
+            }
+        }
+        return data as LiveData<List<T>>
+    }
+
+    private fun getAllProblemDTOsLive(): LiveData<LiveData<List<ProblemDTO>>> {
+        val data = MutableLiveData<LiveData<List<ProblemDTO>>>()
         ChessDatabase.databaseWriteExecutor.execute {
-            problemsDAO.addProblem(
+            data.postValue(problemsDAO.getAllProblemDTOsLive())
+        }
+        return data
+    }
+
+    override fun <T : ProblemInfo> addProblem(problem: T): LiveData<Int> {
+        val data = MutableLiveData<Int>()
+        ChessDatabase.databaseWriteExecutor.execute {
+            val id = problemsDAO.addProblem(
                 ProblemInfoDTO(problem)
             )
+            data.postValue(id)
         }
+        return data
     }
 
     override fun <T : ProblemInfo> getProblem(problemId: Int): LiveData<T?> {

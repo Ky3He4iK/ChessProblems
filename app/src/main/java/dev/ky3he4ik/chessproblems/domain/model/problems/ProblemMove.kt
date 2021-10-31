@@ -8,4 +8,6 @@ open class ProblemMove(
     open val promotion: Char?,
     open val isCastling: Boolean,
     open val move: String
-)
+) {
+    override fun toString(): String = move
+}

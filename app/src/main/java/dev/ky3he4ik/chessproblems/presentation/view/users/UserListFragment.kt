@@ -99,14 +99,6 @@ class UserListFragment : Fragment() {
             )
             findNavController().navigate(R.id.action_userList_to_addUser, bundle)
         }
-//        binding.fabGoogle.setOnClickListener {
-//            Repository.OAUTH.Google.provider.auth { bundle ->
-//                (activity as MainActivity).navHost.navController.navigate(
-//                    R.id.action_userList_to_webFragment,
-//                    bundle
-//                )
-//            }
-//        }
 
         RecyclerItemClickListener.registerListener(context, binding.userRecyclerView,
             object : RecyclerItemClickListener.OnItemClickListener {
@@ -146,13 +138,11 @@ class UserListFragment : Fragment() {
     }
 
     private fun openFabMenu() {
-        binding.fabGoogle.animate().translationY(-resources.getDimension(R.dimen.dp_210))
         binding.fabVk.animate().translationY(-resources.getDimension(R.dimen.dp_140))
         binding.fabLogin.animate().translationY(-resources.getDimension(R.dimen.dp_70))
     }
 
     private fun closeFabMenu() {
-        binding.fabGoogle.animate().translationY(0F)
         binding.fabVk.animate().translationY(0F)
         binding.fabLogin.animate().translationY(0F)
     }

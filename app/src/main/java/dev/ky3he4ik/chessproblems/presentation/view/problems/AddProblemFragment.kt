@@ -19,7 +19,6 @@ import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.AddProblemView
 class AddProblemFragment : Fragment() {
     private lateinit var viewModel: AddProblemViewModel
     private lateinit var binding: AddProblemFragmentBinding
-    private var gettingProblem = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,22 +50,6 @@ class AddProblemFragment : Fragment() {
             (binding.blackPositions.adapter as AddProblemPositionListItemAdapter).addSection()
         }
         binding.whiteStarts.isChecked = true
-
-        binding.getButton.setOnClickListener {
-            if (gettingProblem) {
-                Toast.makeText(context, "Already loading", Toast.LENGTH_SHORT).show()
-            } else {
-                gettingProblem = true
-                Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
-                viewModel.getRandomProblem().observe(viewLifecycleOwner) { value: ProblemInfo? ->
-                    gettingProblem = false
-                    if (value == null)
-                        Toast.makeText(context, "Can't get data", Toast.LENGTH_SHORT).show()
-                    else
-                        setFromProblemInfo(value)
-                }
-            }
-        }
 
         binding.saveButton.setOnClickListener {
             val title = binding.title.text.toString()

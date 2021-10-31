@@ -116,13 +116,6 @@
                     android:importantForAutofill="no"
                     android:inputType="number"
                     android:minHeight="48dp" />
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:text="@string/add_solved_problem" />
             </LinearLayout>
         </ScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

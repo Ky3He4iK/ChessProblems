@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemListFragmentBinding
+import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.presentation.repository.Repository
 import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserInfoDTO
@@ -25,6 +26,7 @@ class ProblemListFragment : Fragment() {
     private lateinit var viewModel: ProblemListViewModel
     private lateinit var binding: ProblemListFragmentBinding
 
+    private var gettingProblem = false
     private var canEdit: Boolean = false
 
     override fun onCreateView(
@@ -70,9 +72,7 @@ class ProblemListFragment : Fragment() {
                     val data =
                         (binding.problemRecyclerView.adapter as ProblemListElementAdapter).data
                     if (position in data.indices) {
-                        val intent = Intent(context, BoardActivity::class.java)
-                        intent.putExtra(BoardActivity.PROBLEM_ID, data[position].problemId)
-                        startActivity(intent)
+                        openBoard(data[position].problemId)
                     } else {
                         Toast.makeText(context, "Invalid position: $position", Toast.LENGTH_SHORT)
                             .show()
@@ -82,6 +82,28 @@ class ProblemListFragment : Fragment() {
 
                 override fun onLongItemClick(view: View?, position: Int) {}
             })
+
+        binding.getButton.setOnClickListener {
+            if (Repository.activeUserId == null)
+                Toast.makeText(context, "Warning! User is not selected", Toast.LENGTH_SHORT).show()
+            if (gettingProblem) {
+                Toast.makeText(context, "Already loading", Toast.LENGTH_SHORT).show()
+            } else {
+                gettingProblem = true
+                Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
+                viewModel.getRandomProblem().observe(viewLifecycleOwner) { value: ProblemInfo? ->
+                    gettingProblem = false
+                    if (value == null)
+                        Toast.makeText(context, "Can't get data", Toast.LENGTH_SHORT).show()
+                    else {
+                        viewModel.addProblem(value).observe(viewLifecycleOwner) {
+                            openBoard(it)
+                        }
+                    }
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -89,7 +111,7 @@ class ProblemListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
 
-        viewModel.getProblemsList().observe(viewLifecycleOwner, {
+        viewModel.getProblemsListLive(viewLifecycleOwner).observe(viewLifecycleOwner, {
             binding.problemRecyclerView.adapter =
                 ProblemListElementAdapter(it, context ?: return@observe)
         })
@@ -104,5 +126,11 @@ class ProblemListFragment : Fragment() {
                     }
                 })
         }
+    }
+
+    private fun openBoard(problemId: Int) {
+        val intent = Intent(context, BoardActivity::class.java)
+        intent.putExtra(BoardActivity.PROBLEM_ID, problemId)
+        startActivity(intent)
     }
 }

@@ -89,7 +89,7 @@ class BoardActivity : AppCompatActivity() {
     private fun getTile(tileNum: Int): BoardTileView = getTile(tileNum / 8, tileNum % 8)
 
     private fun onTileClickListener(tile: BoardTileView, posX: Int, posY: Int) {
-        Log.d("BoardFragment", "$posX $posY")
+//        Log.d("BoardFragment", "$posX $posY")
         when {
             tile.isSelectedTile -> {
                 // remove selection

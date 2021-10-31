@@ -6,11 +6,24 @@
     tools:context=".presentation.view.problems.ProblemListFragment"
     >
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/problemRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/problem_list_element" />
+
+    <ImageButton
+        android:id="@+id/get_button"
+        android:foreground="@drawable/ic_baseline_arrow_circle_down_24"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/download" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"

@@ -1,6 +1,7 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.room.dao
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.FigurePositionDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemDTO
@@ -10,7 +11,7 @@ import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.Problem
 @Dao
 abstract class ProblemsDAO {
     @Transaction
-    open fun addProblem(problem: ProblemInfoDTO) {
+    open fun addProblem(problem: ProblemInfoDTO): Int {
         addProblem(problem.problemDTO)
         val problemId = getLastInserted()
         problem.moves.forEach {
@@ -21,6 +22,7 @@ abstract class ProblemsDAO {
             Log.d("ProblemsDAO/position", it.toString())
             addProblemPosition(FigurePositionDTO(problemId, it))
         }
+        return problemId
     }
 
     @Transaction
@@ -62,6 +64,9 @@ abstract class ProblemsDAO {
 
     @Query("SELECT * FROM problem_info")
     abstract fun getAllProblemDTOs(): List<ProblemDTO>
+
+    @Query("SELECT * FROM problem_info")
+    abstract fun getAllProblemDTOsLive(): LiveData<List<ProblemDTO>>
 
     @Transaction
     open fun getAllProblems(): List<ProblemInfoDTO> {
