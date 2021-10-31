@@ -2,7 +2,6 @@ package dev.ky3he4ik.chessproblems.presentation.repository
 
 import android.app.Application
 import dev.ky3he4ik.chessproblems.presentation.repository.network.chessblunders.ChessBlunders
-import dev.ky3he4ik.chessproblems.presentation.repository.network.google.GoogleAuth
 import dev.ky3he4ik.chessproblems.presentation.repository.network.oauth2.OAuth2Provider
 import dev.ky3he4ik.chessproblems.presentation.repository.network.vk.VkAuth
 import dev.ky3he4ik.chessproblems.presentation.repository.room.ProblemsRepositoryImpl
@@ -38,6 +37,5 @@ object Repository {
 
     enum class OAUTH(val provider: OAuth2Provider) {
         Vk(VkAuth()),
-        Google(GoogleAuth()),
     }
 }

@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import dev.ky3he4ik.chessproblems.presentation.repository.converters.DataTypeConverter
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.FigurePositionDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemMoveDTO
@@ -23,7 +21,6 @@ import java.util.concurrent.Executors
     version = 6,
     exportSchema = false
 )
-@TypeConverters(DataTypeConverter::class)
 abstract class ChessDatabase : RoomDatabase() {
     abstract fun problemsDAO(): ProblemsDAO
     abstract fun usersDAO(): UsersDAO

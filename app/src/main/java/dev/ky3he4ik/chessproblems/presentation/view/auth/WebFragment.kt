@@ -1,4 +1,4 @@
-package dev.ky3he4ik.chessproblems.presentation.view
+package dev.ky3he4ik.chessproblems.presentation.view.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater

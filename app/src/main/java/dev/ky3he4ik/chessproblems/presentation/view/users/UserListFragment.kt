@@ -99,14 +99,14 @@ class UserListFragment : Fragment() {
             )
             findNavController().navigate(R.id.action_userList_to_addUser, bundle)
         }
-        binding.fabGoogle.setOnClickListener {
-            Repository.OAUTH.Google.provider.auth { bundle ->
-                (activity as MainActivity).navHost.navController.navigate(
-                    R.id.action_userList_to_webFragment,
-                    bundle
-                )
-            }
-        }
+//        binding.fabGoogle.setOnClickListener {
+//            Repository.OAUTH.Google.provider.auth { bundle ->
+//                (activity as MainActivity).navHost.navController.navigate(
+//                    R.id.action_userList_to_webFragment,
+//                    bundle
+//                )
+//            }
+//        }
 
         RecyclerItemClickListener.registerListener(context, binding.userRecyclerView,
             object : RecyclerItemClickListener.OnItemClickListener {
