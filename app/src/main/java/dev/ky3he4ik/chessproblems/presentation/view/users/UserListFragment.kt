@@ -17,7 +17,6 @@ import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.UserListFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.presentation.repository.Repository
-import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserInfoDTO
 import dev.ky3he4ik.chessproblems.presentation.view.problems.RecyclerItemClickListener
 import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.UserListElementAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.UserListViewModel
@@ -148,14 +147,9 @@ class UserListFragment : Fragment() {
     }
 
     private fun setCanDelete() {
-        Repository.activeUserId?.let {
-            Repository.usersRepository.getUser<UserInfoDTO>(it)
-                .observe(viewLifecycleOwner, { user ->
-                    if (user != null) {
-                        canDelete = user.roleLevel >= UserInfo.Roles.MODERATOR.roleLevel
-                    }
-                })
-        }
-
+        viewModel.getActiveUser()?.observe(viewLifecycleOwner, { user ->
+            if (user != null)
+                canDelete = viewModel.canDeleteUsers(user)
+        })
     }
 }

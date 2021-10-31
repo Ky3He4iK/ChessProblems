@@ -15,9 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemListFragmentBinding
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
-import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
-import dev.ky3he4ik.chessproblems.presentation.repository.Repository
-import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserInfoDTO
 import dev.ky3he4ik.chessproblems.presentation.view.chess.BoardActivity
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.ProblemListElementAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListViewModel
@@ -73,7 +70,7 @@ class ProblemListFragment : Fragment() {
         RecyclerItemClickListener.registerListener(context, binding.problemRecyclerView,
             object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
-                    if (Repository.activeUserId == null) {
+                    if (viewModel.getActiveUserId() == null) {
                         Toast.makeText(context, "No user selected", Toast.LENGTH_SHORT).show()
                         return
                     }
@@ -92,7 +89,7 @@ class ProblemListFragment : Fragment() {
             })
 
         binding.getButton.setOnClickListener {
-            if (Repository.activeUserId == null)
+            if (viewModel.getActiveUserId() == null)
                 Toast.makeText(context, "Warning! User is not selected", Toast.LENGTH_SHORT).show()
             if (gettingProblem) {
                 Toast.makeText(context, "Already loading", Toast.LENGTH_SHORT).show()
@@ -124,18 +121,17 @@ class ProblemListFragment : Fragment() {
                 ProblemListElementAdapter(it, context ?: return@observe)
         })
 
-        Repository.activeUserId?.let {
-            Repository.usersRepository.getUser<UserInfoDTO>(it)
-                .observe(viewLifecycleOwner, { user ->
-                    if (user != null) {
-                        canEdit = user.roleLevel >= UserInfo.Roles.PREMIUM.roleLevel
-                        binding.floatingActionButton.visibility =
-                            if (canEdit) View.VISIBLE else View.GONE
-                    } else {
-                        canEdit = false
-                        binding.floatingActionButton.visibility = View.GONE
-                    }
-                })
+        viewModel.getActiveUserId()?.let {
+            viewModel.getUser(it).observe(viewLifecycleOwner, { user ->
+                if (user != null) {
+                    canEdit = viewModel.canAddProblems(user)
+                    binding.floatingActionButton.visibility =
+                        if (canEdit) View.VISIBLE else View.GONE
+                } else {
+                    canEdit = false
+                    binding.floatingActionButton.visibility = View.GONE
+                }
+            })
         }
     }
 
