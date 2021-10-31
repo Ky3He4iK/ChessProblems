@@ -52,7 +52,7 @@ class UsersRepositoryImpl(application: Application) : UsersRepository {
     override fun addSolvedProblem(userId: Int, solvedProblem: SolvedProblem) {
         ChessDatabase.databaseWriteExecutor.execute {
             try {
-                usersDAO.addUserSolved(SolvedProblemDTO(userId, solvedProblem))
+                usersDAO.registerSolved(SolvedProblemDTO(userId, solvedProblem))
             } catch (e: Exception) {
                 Log.e("UsersRepo/addProblem", e.message, e)
             }

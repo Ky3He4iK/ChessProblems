@@ -14,20 +14,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.databinding.AddUserFragmentBinding
-import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
-import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
-import dev.ky3he4ik.chessproblems.presentation.view.users.adapters.AddUserSolvedProblemListItemAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.users.AddUserViewModel
 
 class AddUserFragment : Fragment() {
     private lateinit var viewModel: AddUserViewModel
     private lateinit var binding: AddUserFragmentBinding
 
-    private var tokens: UserTokens? = null
     private var roleLevel: Int = UserInfo.Roles.USER.roleLevel
 
     override fun onCreateView(
@@ -35,14 +30,6 @@ class AddUserFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = AddUserFragmentBinding.inflate(layoutInflater, container, false)
-        binding.recyclerView.also {
-            it.layoutManager = LinearLayoutManager(context)
-            it.setHasFixedSize(false)
-            it.adapter = AddUserSolvedProblemListItemAdapter()
-        }
-        binding.button.setOnClickListener {
-            (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).addSection()
-        }
         binding.image.setOnClickListener {
             setPhoto()
         }
@@ -54,28 +41,22 @@ class AddUserFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             val nick = binding.nickname.text.toString()
             val mail = binding.mail.text.toString()
-            val rating = binding.rating.text.toString().toIntOrNull()
-            val solvedProblems =
-                (binding.recyclerView.adapter as AddUserSolvedProblemListItemAdapter).data
+            val rating = binding.rating.text.toString().toIntOrNull() ?: 0
 
-            if (nick.isNotEmpty() && rating != null) {
-                val solvedProblemsModel =
-                    solvedProblems.value?.map { SolvedProblem(it.first, it.second) }
-                        ?: return@setOnClickListener
+            if (nick.isNotEmpty()) {
                 val user =
                     UserInfo(
                         0,
                         nick,
                         viewModel.image.value,
                         rating,
-                        solvedProblemsModel.size,
-                        solvedProblemsModel,
+                        0,
+                        listOf(),
                         mail,
                         roleLevel,
-                        tokens,
                     )
                 viewModel.addUser(user)
-                findNavController().popBackStack()
+                findNavController().navigate(AddUserFragmentDirections.actionAddUserToUserList())
             } else {
                 Toast.makeText(context, "Insert all data", Toast.LENGTH_SHORT).show()
             }

@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_question_mark_24"
         android:title="@string/problems"/>
     <item
-        android:id="@+id/userList"
+        android:id="@+id/userList_g"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="@string/users"/>

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
-import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import dev.ky3he4ik.chessproblems.MainActivity
@@ -33,28 +32,17 @@ class WebFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = WebFragmentBinding.inflate(inflater, container, false)
-        if (url != null && !url.isNullOrEmpty()) {
+        if (url != null && !url.isNullOrEmpty() && method != null) {
             CookieManager.getInstance().removeAllCookies(null)
             binding.web.clearCache(true)
             binding.web.loadUrl(url ?: "")
-            val provider = Repository.OAUTH.values().find { it.name == method }?.provider
-            if (provider != null)
-                binding.web.webViewClient = provider.getWebViewClient(
-                    viewLifecycleOwner,
-                    (requireActivity() as MainActivity).navHost.navController
-                )
-        } else if (urlContent != null) {
-            CookieManager.getInstance().removeAllCookies(null)
-            binding.web.clearCache(true)
-            binding.web.loadUrl("https://oauth.vk.com/authorize/$urlContent")
-            binding.web.webViewClient = WebViewClient()
-//            val provider = Repository.OAUTH.values().find { it.name == method }?.provider
-//            if (provider != null)
-//                binding?.web?.webViewClient = provider.onAuthResponse(
-//                    viewLifecycleOwner,
-//                    (requireActivity() as MainActivity).navHost.navController
-//                )
+            val provider = Repository.OAUTH.valueOf(method ?: "Vk").provider
+            binding.web.webViewClient = provider.getWebViewClient(
+                viewLifecycleOwner,
+                (requireActivity() as MainActivity).navHost.navController
+            )
         }
+
         return binding.root
     }
 }

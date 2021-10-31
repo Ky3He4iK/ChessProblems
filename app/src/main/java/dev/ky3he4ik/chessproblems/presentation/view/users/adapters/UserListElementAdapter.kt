@@ -38,9 +38,9 @@ class UserListElementAdapter(val data: List<UserInfo>) :
         holder.binding.solved.text = "Solved: " + userInfo.solved.toString()
         holder.binding.mail.text = "Mail: " + userInfo.mail
         val role = UserInfo.Roles.values().sortedByDescending { it.roleLevel }.firstOrNull {
-            it.roleLevel >= userInfo.roleLevel
-        }
-        holder.binding.role.text = "Role: " + role.toString()
+            it.roleLevel <= userInfo.roleLevel
+        } ?: UserInfo.Roles.USER
+        holder.binding.role.text = "Role: $role"
         val sb = StringBuilder("Solved problems:")
         userInfo.solvedProblems.forEach { sb.append("\n${it.problemId} - ${it.solvingTime / 1000}s") }
         holder.binding.solvedProblems.text = sb

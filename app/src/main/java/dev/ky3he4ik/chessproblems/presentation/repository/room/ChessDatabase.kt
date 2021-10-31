@@ -11,7 +11,6 @@ import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.Problem
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemMoveDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.model.users.SolvedProblemDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserDTO
-import dev.ky3he4ik.chessproblems.presentation.repository.model.users.UserTokensDTO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.ProblemsDAO
 import dev.ky3he4ik.chessproblems.presentation.repository.room.dao.UsersDAO
 import java.util.concurrent.ExecutorService
@@ -20,8 +19,8 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [ProblemDTO::class, FigurePositionDTO::class, ProblemMoveDTO::class,
-        UserDTO::class, SolvedProblemDTO::class, UserTokensDTO::class],
-    version = 5,
+        UserDTO::class, SolvedProblemDTO::class],
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(DataTypeConverter::class)

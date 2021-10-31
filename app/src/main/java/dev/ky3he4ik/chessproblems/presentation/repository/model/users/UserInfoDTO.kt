@@ -4,7 +4,6 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Relation
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
-import dev.ky3he4ik.chessproblems.domain.model.users.UserTokens
 
 class UserInfoDTO(
     @Embedded
@@ -12,9 +11,6 @@ class UserInfoDTO(
 
     @Relation(parentColumn = "user_id", entityColumn = "user_id")
     override val solvedProblems: List<SolvedProblemDTO>,
-
-    @Relation(parentColumn = "user_id", entityColumn = "user_id")
-    override val tokens: UserTokensDTO?,
 ) : UserInfo(
     userDTO.userId,
     userDTO.nick,
@@ -24,7 +20,6 @@ class UserInfoDTO(
     solvedProblems,
     userDTO.mail,
     userDTO.roleLevel,
-    tokens
 ) {
     constructor(user: UserInfo) : this(
         UserDTO(
@@ -37,7 +32,6 @@ class UserInfoDTO(
             user.roleLevel,
         ),
         user.solvedProblems.map { SolvedProblemDTO(user.userId, it) },
-        UserTokensDTO(user.userId, user.tokens?: UserTokens()),
     )
 
     @Ignore

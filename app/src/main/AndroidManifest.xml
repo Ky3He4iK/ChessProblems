@@ -46,6 +46,9 @@
                 <data
                     android:scheme="https"
                     android:host="oauth.vk.com"/>
+                <data
+                    android:scheme="https"
+                    android:host="dev.ky3he4ik.chessproblems"/>
             </intent-filter>
         </activity>
     </application>

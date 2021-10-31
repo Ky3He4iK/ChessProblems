@@ -8,6 +8,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import dev.ky3he4ik.chessproblems.BuildConfig
 import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.presentation.repository.network.oauth2.OAuth2Provider
@@ -42,7 +43,7 @@ class VkAuth : OAuth2Provider() {
                     val token = parsedUri.getQueryParameter("access_token") ?: return true
                     val email = parsedUri.getQueryParameter("email") ?: ""
 
-                    api.getUserInfo(api_info, token)?.enqueue(object :
+                    api.getUserInfo(token)?.enqueue(object :
                         Callback<APIResponse?> {
                         override fun onResponse(
                             call: Call<APIResponse?>,
@@ -62,7 +63,7 @@ class VkAuth : OAuth2Provider() {
                                 )
                                 bundle.putInt(
                                     "role_level",
-                                    UserInfo.Roles.USER.roleLevel
+                                    UserInfo.Roles.PREMIUM.roleLevel
                                 )
                                 navController.navigate(R.id.action_webFragment_to_addUser, bundle)
                             }
@@ -81,19 +82,15 @@ class VkAuth : OAuth2Provider() {
     }
 
     override val authUrl: String =
-        "https://oauth.vk.com/authorize?client_id=7954421&scope=email&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&response_type=token&scope=offline,email"
+        "https://oauth.vk.com/authorize?client_id=${BuildConfig.VK_AUTH_KEY}&scope=email&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&response_type=token&scope=offline,email"
 
-    class APIResponse {
-        inner class APIPerson {
-            var first_name: String? = null
-            var last_name: String? = null
-            var id = 0
-        }
+    override val method: String = "Vk"
 
-        var response: APIPerson? = null
-    }
-
-    companion object {
-        val api_info = mapOf(Pair("v", "5.131"))
+    data class APIResponse(val response: APIPerson? = null) {
+        data class APIPerson (
+            val first_name: String? = null,
+            val last_name: String? = null,
+            val id: Int = 0,
+        )
     }
 }

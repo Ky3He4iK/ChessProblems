@@ -9,7 +9,6 @@ open class UserInfo(
     open val solvedProblems: List<SolvedProblem>,
     open val mail: String,
     open val roleLevel: Int,
-    open val tokens: UserTokens?,
 ) {
     enum class Roles(val roleLevel: Int) {
         USER(2),
