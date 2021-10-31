@@ -58,20 +58,20 @@ class ProblemListElementAdapter(val data: List<ProblemInfo>, val context: Contex
         }
         sb.append(sbB)
         holder.binding.positions.text = sb.toString()
-        holder.binding.shareImage.setOnClickListener {
-            Toast.makeText(context, "Temporary not working", Toast.LENGTH_SHORT).show()
-            return@setOnClickListener
-
-            val encoded = ProblemOperations.toUrl(problemInfo)
-            val sendIntent = Intent(Intent.ACTION_SEND)
-            sendIntent.putExtra(
-                Intent.EXTRA_TEXT,
-                "https://c.ky3he4ik.dev/p/?$encoded"
-            )
-            sendIntent.type = "text/plain"
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(it.context, shareIntent, null)
-        }
+//        holder.binding.shareImage.setOnClickListener {
+//            Toast.makeText(context, "Temporary not working", Toast.LENGTH_SHORT).show()
+//            return@setOnClickListener
+//
+//            val encoded = ProblemOperations.toUrl(problemInfo)
+//            val sendIntent = Intent(Intent.ACTION_SEND)
+//            sendIntent.putExtra(
+//                Intent.EXTRA_TEXT,
+//                "https://c.ky3he4ik.dev/p/?$encoded"
+//            )
+//            sendIntent.type = "text/plain"
+//            val shareIntent = Intent.createChooser(sendIntent, null)
+//            startActivity(it.context, shareIntent, null)
+//        }
     }
 
     class ProblemListElementHolder(val binding: ProblemListElementBinding) :

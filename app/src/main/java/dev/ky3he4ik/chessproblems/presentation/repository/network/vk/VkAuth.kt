@@ -82,7 +82,7 @@ class VkAuth : OAuth2Provider() {
     }
 
     override val authUrl: String =
-        "https://oauth.vk.com/authorize?client_id=${BuildConfig.VK_AUTH_KEY}&scope=email&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&response_type=token&scope=offline,email"
+        "https://oauth.vk.com/authorize?client_id=${BuildConfig.VK_AUTH_KEY}&scope=email&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&response_type=token&scope=email"
 
     override val method: String = "Vk"
 

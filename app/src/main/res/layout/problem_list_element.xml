@@ -79,21 +79,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/moves" />
 
-        <ImageButton
-            android:id="@+id/shareImage"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:layout_gravity="center"
-            android:background="@color/gray"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/ic_baseline_share_24"
-            app:layout_constraintTop_toBottomOf="@id/positions"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+<!--        <ImageButton-->
+<!--            android:id="@+id/shareImage"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@color/gray"-->
+<!--            android:padding="10dp"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:src="@drawable/ic_baseline_share_24"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/positions"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

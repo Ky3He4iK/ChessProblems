@@ -53,6 +53,14 @@ class ProblemListFragment : Fragment() {
                     )
                 }
             }
+
+            override fun getSwipeDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                if (!canEdit) return 0
+                return super.getSwipeDirs(recyclerView, viewHolder)
+            }
         }).attachToRecyclerView(binding.problemRecyclerView)
         binding.floatingActionButton.setOnClickListener {
             if (canEdit) {
@@ -123,6 +131,9 @@ class ProblemListFragment : Fragment() {
                         canEdit = user.roleLevel >= UserInfo.Roles.PREMIUM.roleLevel
                         binding.floatingActionButton.visibility =
                             if (canEdit) View.VISIBLE else View.GONE
+                    } else {
+                        canEdit = false
+                        binding.floatingActionButton.visibility = View.GONE
                     }
                 })
         }
