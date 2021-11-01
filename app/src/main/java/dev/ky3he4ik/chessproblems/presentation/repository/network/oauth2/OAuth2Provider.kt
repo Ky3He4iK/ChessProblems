@@ -11,14 +11,8 @@ abstract class OAuth2Provider {
 
     fun auth(navigateToWeb: (Bundle) -> Unit) {
         val bundle = Bundle()
-        bundle.putString(
-            "url",
-            authUrl
-        )
-        bundle.putString(
-            "method",
-            method
-        )
+        bundle.putString("url", authUrl)
+        bundle.putString("method", method)
         navigateToWeb(bundle)
     }
 

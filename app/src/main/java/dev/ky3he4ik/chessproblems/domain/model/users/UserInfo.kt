@@ -11,9 +11,9 @@ open class UserInfo(
     open val roleLevel: Int,
 ) {
     enum class Roles(val roleLevel: Int) {
-        USER(2),
-        PREMIUM(5),
-        MODERATOR(20),
-        ADMIN(50),
+        USER(1), // 1
+        PREMIUM(5), // 4+1
+        MODERATOR(21), // 16+4+1
+        ADMIN(255),
     }
 }

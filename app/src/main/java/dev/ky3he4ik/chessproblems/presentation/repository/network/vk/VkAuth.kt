@@ -42,37 +42,7 @@ class VkAuth : OAuth2Provider() {
                     val parsedUri = Uri.parse(request.url.toString().replace("#", "?"))
                     val token = parsedUri.getQueryParameter("access_token") ?: return true
                     val email = parsedUri.getQueryParameter("email") ?: ""
-
-                    api.getUserInfo(token)?.enqueue(object :
-                        Callback<APIResponse?> {
-                        override fun onResponse(
-                            call: Call<APIResponse?>,
-                            response: Response<APIResponse?>
-                        ) {
-                            if (response.isSuccessful && response.body() != null) {
-                                val bundle = Bundle()
-
-                                bundle.putString(
-                                    "mail",
-                                    email
-                                )
-                                bundle.putString(
-                                    "nick",
-                                    response.body()?.response?.first_name?.plus(" ")
-                                        ?.plus(response.body()?.response?.last_name) ?: ""
-                                )
-                                bundle.putInt(
-                                    "role_level",
-                                    UserInfo.Roles.PREMIUM.roleLevel
-                                )
-                                navController.navigate(R.id.action_webFragment_to_addUser, bundle)
-                            }
-                        }
-
-                        override fun onFailure(call: Call<APIResponse?>, t: Throwable) {
-                            Log.e("BlundersAPI", "Fail to get problem: " + t.message, t)
-                        }
-                    })
+                    getUserInfo(token, email, navController)
                     return false
                 }
                 view.loadUrl(request.url.toString())
@@ -81,13 +51,37 @@ class VkAuth : OAuth2Provider() {
         }
     }
 
+    private fun getUserInfo(token: String, email: String, navController: NavController) {
+        api.getUserInfo(token)?.enqueue(object :
+            Callback<APIResponse?> {
+            override fun onResponse(
+                call: Call<APIResponse?>,
+                response: Response<APIResponse?>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    val bundle = Bundle()
+                    val name =
+                        "${response.body()?.response?.first_name ?: ""} ${response.body()?.response?.last_name ?: ""}".trim()
+                    bundle.putString("mail", email)
+                    bundle.putString("nick", name)
+                    bundle.putInt("role_level", UserInfo.Roles.PREMIUM.roleLevel)
+                    navController.navigate(R.id.action_webFragment_to_addUser, bundle)
+                }
+            }
+
+            override fun onFailure(call: Call<APIResponse?>, t: Throwable) {
+                Log.e("BlundersAPI", "Fail to get problem: " + t.message, t)
+            }
+        })
+    }
+
     override val authUrl: String =
         "https://oauth.vk.com/authorize?client_id=${BuildConfig.VK_AUTH_KEY}&scope=email&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&response_type=token&scope=email"
 
     override val method: String = "Vk"
 
     data class APIResponse(val response: APIPerson? = null) {
-        data class APIPerson (
+        data class APIPerson(
             val first_name: String? = null,
             val last_name: String? = null,
             val id: Int = 0,

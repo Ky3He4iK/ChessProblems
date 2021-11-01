@@ -86,11 +86,11 @@ class UserListFragment : Fragment() {
 
             bundle.putString(
                 "mail",
-                "mail"
+                null,
             )
             bundle.putString(
                 "nick",
-                "name"
+                null,
             )
             bundle.putInt(
                 "role_level",

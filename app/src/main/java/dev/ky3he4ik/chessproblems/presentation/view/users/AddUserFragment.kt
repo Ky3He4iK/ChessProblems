@@ -110,7 +110,8 @@ class AddUserFragment : Fragment() {
         if (mail != null) {
             binding.mail.setText(mail)
             binding.mail.isEnabled = false
-        }
+        } else
+            binding.mail.isEnabled = true
         if (nick != null)
             binding.nickname.setText(nick)
     }
