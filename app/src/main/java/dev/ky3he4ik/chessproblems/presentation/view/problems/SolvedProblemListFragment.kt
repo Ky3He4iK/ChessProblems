@@ -19,7 +19,7 @@ import dev.ky3he4ik.chessproblems.presentation.view.chess.BoardActivity
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.ProblemListElementAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListViewModel
 
-class ProblemListFragment : Fragment() {
+class SolvedProblemListFragment : Fragment() {
     private lateinit var viewModel: ProblemListViewModel
     private lateinit var binding: ProblemListFragmentBinding
 
@@ -88,26 +88,7 @@ class ProblemListFragment : Fragment() {
                 override fun onLongItemClick(view: View?, position: Int) {}
             })
 
-        binding.getButton.setOnClickListener {
-            if (viewModel.getActiveUserId() == null)
-                Toast.makeText(context, "Warning! User is not selected", Toast.LENGTH_SHORT).show()
-            if (gettingProblem) {
-                Toast.makeText(context, "Already loading", Toast.LENGTH_SHORT).show()
-            } else {
-                gettingProblem = true
-                Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
-                viewModel.getRandomProblem().observe(viewLifecycleOwner) { value: ProblemInfo? ->
-                    gettingProblem = false
-                    if (value == null)
-                        Toast.makeText(context, "Can't get data", Toast.LENGTH_SHORT).show()
-                    else {
-                        viewModel.addProblem(value).observe(viewLifecycleOwner) {
-                            openBoard(it)
-                        }
-                    }
-                }
-            }
-        }
+        binding.getButton.visibility = View.GONE
 
         return binding.root
     }

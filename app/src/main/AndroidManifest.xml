@@ -11,13 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChessProblems">
+        <service
+            android:name=".presentation.service.StopwatchService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".presentation.view.chess.BoardActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,15 +45,17 @@
                     android:scheme="https" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="https"
-                    android:host="oauth.vk.com"/>
+                    android:host="oauth.vk.com"
+                    android:scheme="https" />
                 <data
-                    android:scheme="https"
-                    android:host="dev.ky3he4ik.chessproblems"/>
+                    android:host="dev.ky3he4ik.chessproblems"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
     </application>

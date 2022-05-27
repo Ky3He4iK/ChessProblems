@@ -10,83 +10,44 @@ import dev.ky3he4ik.chessproblems.R
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.BitmapStorage
 import dev.ky3he4ik.chessproblems.presentation.view.chess.utils.Piece
 import kotlin.math.min
+import kotlin.reflect.KProperty
 
 
 class BoardTileView : View {
+    // run function only when change
+    inner class OnChangeDelegator<T>(private var field: T, private val onChange: (T) -> Unit) {
+        operator fun getValue(thisRef: BoardTileView, property: KProperty<*>): T = field
+
+        operator fun setValue(thisRef: BoardTileView, property: KProperty<*>, value: T) {
+            if (value != field) {
+                field = value
+                onChange(field)
+            }
+        }
+    }
+
     private val isWhiteTile: Boolean
         get() = (posX + posY) % 2 == 1
 
-    private var backgroundBitmap: Bitmap? = null
-        set(value) {
-            if (field != value) {
-                field = value
-                invalidate()
-            }
-        }
+    private var backgroundBitmap: Bitmap? by OnChangeDelegator(null) { invalidate() }
 
-    private var coordBitmap: Bitmap? = null
-        set(value) {
-            if (field != value) {
-                field = value
-                invalidate()
-            }
-        }
+    private var coordBitmap: Bitmap? by OnChangeDelegator(null) { invalidate() }
 
-    private var pieceBitmap: Bitmap? = null
-        set(value) {
-            if (field != value) {
-                field = value
-                invalidate()
-            }
-        }
+    private var pieceBitmap: Bitmap? by OnChangeDelegator(null) { invalidate() }
 
-    var posX: Int = -1
-        set(value) {
-            if (field != value) {
-                field = value
-                onCoordChanged()
-            }
-        }
+    var posX: Int by OnChangeDelegator(-1) { onCoordChanged() }
 
-    var posY: Int = -1
-        set(value) {
-            if (field != value) {
-                field = value
-                onCoordChanged()
-            }
-        }
+    var posY: Int by OnChangeDelegator(-1) { onCoordChanged() }
 
-    var isSelectedTile: Boolean = false
-        set(value) {
-            if (field != value) {
-                field = value
-                onSelectionChanged()
-            }
-        }
+    var isSelectedTile: Boolean by OnChangeDelegator(false) { onSelectionChanged() }
 
-    var isSelectedPosition: Boolean = false
-        set(value) {
-            if (field != value) {
-                field = value
-                onSelectionChanged()
-            }
-        }
+    var isSelectedPosition: Boolean by OnChangeDelegator(false) { onSelectionChanged() }
 
-    var isBoardFlipped: Boolean = false
-        set(value) {
-            if (field != value) {
-                field = value
-                onCoordChanged()
-            }
-        }
+    var isBoardFlipped: Boolean by OnChangeDelegator(false) { onCoordChanged() }
 
-    var piece: Piece? = null
-        set(value) {
-            if (field != value) {
-                field = value
-                pieceBitmap = BitmapStorage.getBitmap(value?.id, context)
-            }
-        }
+    var piece: Piece? by OnChangeDelegator(null) {
+        pieceBitmap = BitmapStorage.getBitmap(it?.id, context)
+    }
 
     private fun onCoordChanged() {
         coordBitmap = when {

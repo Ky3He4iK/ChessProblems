@@ -9,8 +9,11 @@ import dev.ky3he4ik.chessproblems.domain.model.users.UserInfo
 import dev.ky3he4ik.chessproblems.domain.operations.UserOperations
 
 class ProblemListViewModel : ViewModel() {
-    fun getProblemsListLive(lifecycleOwner: LifecycleOwner): LiveData<List<ProblemInfo>> =
-        Repository.problemsRepository.getAllProblemsLive(lifecycleOwner)
+    fun getSolvedProblemsListLive(lifecycleOwner: LifecycleOwner): LiveData<List<ProblemInfo>> =
+        Repository.problemsRepository.getSolvedProblemsLive(lifecycleOwner)
+
+    fun getUnsolvedProblemsListLive(lifecycleOwner: LifecycleOwner): LiveData<List<ProblemInfo>> =
+        Repository.problemsRepository.getUnsolvedProblemsLive(lifecycleOwner)
 
     fun deleteProblem(problem: ProblemInfo) =
         Repository.problemsRepository.deleteProblem(problem)
