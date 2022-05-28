@@ -9,12 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.ky3he4ik.chessproblems.databinding.ProblemListFragmentBinding
-import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
 import dev.ky3he4ik.chessproblems.presentation.view.chess.BoardActivity
 import dev.ky3he4ik.chessproblems.presentation.view.problems.adapters.ProblemListElementAdapter
 import dev.ky3he4ik.chessproblems.presentation.viewmodel.problems.ProblemListViewModel
@@ -59,14 +57,7 @@ class SolvedProblemListFragment : Fragment() {
                 return super.getSwipeDirs(recyclerView, viewHolder)
             }
         }).attachToRecyclerView(binding.problemRecyclerView)
-        binding.floatingActionButton.setOnClickListener {
-            if (canEdit) {
-                val action = ProblemListFragmentDirections.actionProblemListToAddProblem()
-                it.findNavController().navigate(action)
-            } else {
-                Toast.makeText(context, "Access denied", Toast.LENGTH_SHORT).show()
-            }
-        }
+
         RecyclerItemClickListener.registerListener(context, binding.problemRecyclerView,
             object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
@@ -89,6 +80,7 @@ class SolvedProblemListFragment : Fragment() {
             })
 
         binding.getButton.visibility = View.GONE
+        binding.floatingActionButton.visibility = View.GONE
 
         return binding.root
     }
@@ -97,7 +89,7 @@ class SolvedProblemListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
 
-        viewModel.getProblemsListLive(viewLifecycleOwner).observe(viewLifecycleOwner) {
+        viewModel.getSolvedProblemsListLive().observe(viewLifecycleOwner) {
             binding.problemRecyclerView.adapter =
                 ProblemListElementAdapter(it, context ?: return@observe)
         }

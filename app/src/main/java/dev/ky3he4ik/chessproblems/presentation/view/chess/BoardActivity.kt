@@ -37,19 +37,24 @@ class BoardActivity : AppCompatActivity() {
     private var openedMoves = 0
     private var moves: ArrayList<ProblemMove> = arrayListOf()
     private var isFlipped = false
-    private var timeStart: Long = 0
     private var hintedCells = arrayListOf<Int>()
 
-    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
+    private val updateTime = object : BroadcastReceiver() {
+        var time: Long = 0
+
         override fun onReceive(context: Context, intent: Intent) {
-            val time = intent.getIntExtra(StopwatchService.TIME_EXTRA, 0) / 1000
+            time = intent.getLongExtra(StopwatchService.TIME_EXTRA, 0) / 1000
             binding.boardTime.text = String.format("%02d:%02d", time / 60, time % 60)
         }
     }
 
+    override fun finish() {
+        stopService(serviceIntent)
+        super.finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        timeStart = System.currentTimeMillis()
         binding = ActivityBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
@@ -113,8 +118,11 @@ class BoardActivity : AppCompatActivity() {
 
         serviceIntent = Intent(applicationContext, StopwatchService::class.java)
         registerReceiver(updateTime, IntentFilter(StopwatchService.TIMER_UPDATED))
+        startService(serviceIntent)
         showMoves()
     }
+
+
 
     private fun buildBoard() {
         tiles = Array(8) { x -> Array(8) { y -> BoardTileView(this, x, y) } }
@@ -171,7 +179,14 @@ class BoardActivity : AppCompatActivity() {
                 val selected = getTile(selectedTile)
                 selected.isSelectedTile = false
                 selectedTile = -1
-                if (movePiece(selected.posX, selected.posY, tile.posX, tile.posY, moves[currentMove])) {
+                if (movePiece(
+                        selected.posX,
+                        selected.posY,
+                        tile.posX,
+                        tile.posY,
+                        moves[currentMove]
+                    )
+                ) {
                     currentMove++
                     openedMoves = max(openedMoves, currentMove)
                     if (currentMove < moves.size) {
@@ -191,8 +206,13 @@ class BoardActivity : AppCompatActivity() {
                                 Toast.makeText(applicationContext, "Solved!", Toast.LENGTH_SHORT)
                                     .show()
                                 if (problem != null)
-                                    viewModel.registerProblemSolved(problem?.problemId ?: 0, 0, 0)
+                                    viewModel.registerProblemSolved(
+                                        problem?.problemId ?: 0,
+                                        Repository.activeUserId ?: 0,
+                                        updateTime.time
+                                    )
                             }
+                            stopService(serviceIntent)
                             showMoves()
                         }, 1000)
                     } else {
@@ -201,8 +221,9 @@ class BoardActivity : AppCompatActivity() {
                             viewModel.registerProblemSolved(
                                 problem?.problemId ?: 0,
                                 Repository.activeUserId ?: 0,
-                                System.currentTimeMillis() - timeStart
+                                updateTime.time
                             )
+                        stopService(serviceIntent)
                     }
                     showMoves()
                 } else {
@@ -271,18 +292,18 @@ class BoardActivity : AppCompatActivity() {
             var i = bias
             if (!problem.whiteStarts && openedMoves > 0) {
                 var s = "1. ... - ${moves[0].move}"
-                if (currentMove == 0)
-                    s = "<b>$s</b>"
-                sb.append(s)
+//                if (currentMove == 0)
+//                    s = "<b>$s</b>"
+                sb.append(s).append("<br>")
             }
             while (i < openedMoves) {
                 var s: String = if (i + 1 < openedMoves)
-                    "${i / 2 + 1}. ${moves[i].move} - ${moves[i + 1].move}"
+                    "${(i + bias) / 2 + 1}. ${moves[i].move} - ${moves[i + 1].move}"
                 else
-                    "${i / 2 + 1}. ${moves[i].move}"
-                if (i == currentMove || i + 1 == currentMove)
-                    s = "<b>$s</b>"
-                sb.append(s)
+                    "${(i + bias) / 2 + 1}. ${moves[i].move}"
+//                if (i == currentMove || i + 1 == currentMove)
+//                    s = "<b>$s</b>"
+                sb.append(s).append("<br>")
                 i += 2
             }
             if (Build.VERSION.SDK_INT >= 24)

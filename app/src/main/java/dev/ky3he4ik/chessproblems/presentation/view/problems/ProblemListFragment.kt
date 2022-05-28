@@ -116,7 +116,7 @@ class ProblemListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProblemListViewModel::class.java)
 
-        viewModel.getProblemsListLive(viewLifecycleOwner).observe(viewLifecycleOwner) {
+        viewModel.getUnsolvedProblemsListLive().observe(viewLifecycleOwner) {
             binding.problemRecyclerView.adapter =
                 ProblemListElementAdapter(it, context ?: return@observe)
         }

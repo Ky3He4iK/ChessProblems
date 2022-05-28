@@ -68,6 +68,17 @@
             app:destination="@id/userList_g" />
     </fragment>
     <fragment
+        android:id="@+id/solvedProblemList"
+        android:name="dev.ky3he4ik.chessproblems.presentation.view.problems.SolvedProblemListFragment"
+        android:label="ProblemList">
+        <action
+            android:id="@+id/action_solvedProblemList_to_addProblem"
+            app:destination="@id/addProblem" />
+        <action
+            android:id="@+id/action_solvedProblemList_to_userList"
+            app:destination="@id/userList_g" />
+    </fragment>
+    <fragment
         android:id="@+id/webFragment"
         android:name="dev.ky3he4ik.chessproblems.presentation.view.auth.WebFragment"
         android:label="WebFragment">

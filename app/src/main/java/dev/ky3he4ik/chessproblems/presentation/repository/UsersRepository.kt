@@ -9,5 +9,6 @@ interface UsersRepository {
     fun <T : UserInfo> addUser(user: T)
     fun <T : UserInfo> getUser(userId: Int): LiveData<T?>
     fun <T : UserInfo> deleteUser(user: T)
+    fun hasUser(userId: Int): Boolean
     fun addSolvedProblem(userId: Int, solvedProblem: SolvedProblem)
 }

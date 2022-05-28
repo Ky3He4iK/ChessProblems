@@ -1,7 +1,6 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.room
 
 import android.app.Application
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dev.ky3he4ik.chessproblems.domain.model.problems.ProblemInfo
@@ -25,50 +24,34 @@ class ProblemsRepositoryImpl(application: Application) : ProblemsRepository {
         return data as LiveData<List<T>>
     }
 
-    override fun <T : ProblemInfo> getUnsolvedProblemsLive(
-        lifecycleOwner: LifecycleOwner,
-        userId: Int
-    ): LiveData<List<T>> {
+    override fun <T : ProblemInfo> getUnsolvedProblemsLive(userId: Int?): LiveData<List<T>> {
+        userId ?: return getAllProblemsLive()
         val data = MutableLiveData<List<ProblemInfoDTO>>()
         ChessDatabase.databaseWriteExecutor.execute {
-            problemsDAO.getUnsolvedProblemsDTOsLive(userId).observe(lifecycleOwner) { list ->
-                ChessDatabase.databaseWriteExecutor.execute {
-                    data.postValue(list.mapNotNull {
-                        problemsDAO.getProblemInfo(it.problemId)
-                    })
-                }
-            }
+            data.postValue(problemsDAO.getUnsolvedProblemsDTOs(userId).mapNotNull {
+                problemsDAO.getProblemInfo(it.problemId)
+            })
         }
         return data as LiveData<List<T>>
     }
 
-    override fun <T : ProblemInfo> getSolvedProblemsLive(
-        lifecycleOwner: LifecycleOwner,
-        userId: Int
-    ): LiveData<List<T>> {
+    override fun <T : ProblemInfo> getSolvedProblemsLive(userId: Int?): LiveData<List<T>> {
         val data = MutableLiveData<List<ProblemInfoDTO>>()
+        userId ?: return data as LiveData<List<T>>
         ChessDatabase.databaseWriteExecutor.execute {
-            problemsDAO.getSolvedProblemsDTOsLive(userId).observe(lifecycleOwner) { list ->
-                ChessDatabase.databaseWriteExecutor.execute {
-                    data.postValue(list.mapNotNull {
-                        problemsDAO.getProblemInfo(it.problemId)
-                    })
-                }
-            }
+            data.postValue(problemsDAO.getSolvedProblemsDTOs(userId).mapNotNull {
+                problemsDAO.getProblemInfo(it.problemId)
+            })
         }
         return data as LiveData<List<T>>
     }
 
-    override fun <T : ProblemInfo> getAllProblemsLive(lifecycleOwner: LifecycleOwner): LiveData<List<T>> {
+    override fun <T : ProblemInfo> getAllProblemsLive(): LiveData<List<T>> {
         val data = MutableLiveData<List<ProblemInfoDTO>>()
         ChessDatabase.databaseWriteExecutor.execute {
-            problemsDAO.getAllProblemDTOsLive().observe(lifecycleOwner) { list ->
-                ChessDatabase.databaseWriteExecutor.execute {
-                    data.postValue(list.mapNotNull {
-                        problemsDAO.getProblemInfo(it.problemId)
-                    })
-                }
-            }
+            data.postValue(problemsDAO.getAllProblemDTOs().mapNotNull {
+                problemsDAO.getProblemInfo(it.problemId)
+            })
         }
         return data as LiveData<List<T>>
     }

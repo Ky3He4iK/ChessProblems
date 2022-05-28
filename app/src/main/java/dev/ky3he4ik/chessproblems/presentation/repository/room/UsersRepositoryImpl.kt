@@ -49,6 +49,10 @@ class UsersRepositoryImpl(application: Application) : UsersRepository {
         }
     }
 
+    override fun hasUser(userId: Int): Boolean {
+        return usersDAO.getUser(userId) != null
+    }
+
     override fun addSolvedProblem(userId: Int, solvedProblem: SolvedProblem) {
         ChessDatabase.databaseWriteExecutor.execute {
             try {

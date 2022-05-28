@@ -1,9 +1,6 @@
 package dev.ky3he4ik.chessproblems.presentation.repository.model.users
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import dev.ky3he4ik.chessproblems.domain.model.users.SolvedProblem
 import dev.ky3he4ik.chessproblems.presentation.repository.model.problems.ProblemDTO
 

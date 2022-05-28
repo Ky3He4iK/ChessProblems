@@ -13,8 +13,7 @@
         android:theme="@style/Theme.ChessProblems">
         <service
             android:name=".presentation.service.StopwatchService"
-            android:enabled="true"
-            android:exported="true"></service>
+            android:enabled="true" />
 
         <activity
             android:name=".presentation.view.chess.BoardActivity"

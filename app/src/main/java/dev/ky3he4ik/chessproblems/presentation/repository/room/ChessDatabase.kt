@@ -64,6 +64,7 @@ abstract class ChessDatabase : RoomDatabase() {
                 "chess_problems_db"
             )
                 .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
 //                .addMigrations(migration_2_3)
                 .build()
         }
