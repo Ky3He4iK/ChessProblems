@@ -68,10 +68,10 @@ abstract class ProblemsDAO {
     @Query("SELECT * FROM problem_info")
     abstract fun getAllProblemDTOsLive(): LiveData<List<ProblemDTO>>
 
-    @Query("SELECT * FROM problem_info p WHERE p.problem_id IN (SELECT s.problem_id FROM solved_problem s WHERE s.user_id == :userId)")
+    @Query("SELECT * FROM problem_info p WHERE p.problem_id IN (SELECT DISTINCT s.problem_id FROM solved_problem s WHERE s.user_id == :userId)")
     abstract fun getSolvedProblemsDTOs(userId: Int): List<ProblemDTO>
 
-    @Query("SELECT * FROM problem_info p WHERE p.problem_id NOT IN (SELECT s.problem_id FROM solved_problem s WHERE s.user_id == :userId)")
+    @Query("SELECT * FROM problem_info p WHERE p.problem_id NOT IN (SELECT DISTINCT s.problem_id FROM solved_problem s WHERE s.user_id == :userId)")
     abstract fun getUnsolvedProblemsDTOs(userId: Int): List<ProblemDTO>
 
     @Transaction

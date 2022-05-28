@@ -119,6 +119,16 @@ class ProblemListFragment : Fragment() {
         viewModel.getUnsolvedProblemsListLive().observe(viewLifecycleOwner) {
             binding.problemRecyclerView.adapter =
                 ProblemListElementAdapter(it, context ?: return@observe)
+            if (it.isEmpty()) {
+                gettingProblem = true
+                viewModel.getRandomProblem().observe(viewLifecycleOwner) { value: ProblemInfo? ->
+                    gettingProblem = false
+                    if (value == null)
+                        Toast.makeText(context, "Can't get data", Toast.LENGTH_SHORT).show()
+                    else
+                        viewModel.addProblem(value)
+                }
+            }
         }
 
         viewModel.getActiveUserId()?.let {
